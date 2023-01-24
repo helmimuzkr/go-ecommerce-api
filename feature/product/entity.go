@@ -8,11 +8,19 @@ import (
 
 type Core struct {
 	ID          uint
+<<<<<<< HEAD
 	Name        string `validate:"min=3"`
 	Description string `validate:"min=5"`
 	SellerName  string
 	City        string
 	Price       int `validate:"gte=10000"`
+=======
+	Name        string
+	Description string
+	SellerName  string
+	City        string
+	Price       int
+>>>>>>> ced26ac (feat: add product cotnract)
 	Stock       int
 	Image       string
 }
