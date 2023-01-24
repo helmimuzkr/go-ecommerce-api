@@ -1,0 +1,652 @@
+openapi: 3.0.3
+info:
+  title: E-Commerce
+  description: |-
+    API untuk E-Commerce Project
+  version: 1.0.0
+servers:
+  - url : https://kicks.com
+    description: digunakan untuk ujicoba
+tags:
+  - name : users
+  - name : products
+  - name : carts
+  - name : orders
+paths:
+  /register:
+    post:
+      tags:
+        - "users"
+      description: registrasi users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name: 
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string 
+                city:
+                  type: string
+            example:
+              username: budi
+              email: budi@yahoo.com
+              password: "budi123"
+              city: papua
+      responses:
+        201:
+          description: "berhasil"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "sukses menambahkan data"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/400'
+  /login:
+    post:
+      tags:
+        - users
+      description: "untuk melakukan login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        200:
+          description: berhasil login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObject'
+              example:
+                data:
+                  token: "locm2u32u89fhdu8w7fi"
+                message: "sukses login"
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'   
+  /users:
+    get:
+      tags:
+        - "users"
+      description: untuk melihat profile user
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: "sukses melihat data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObjectArr'
+              example:
+                username: "budidi"
+                name: "budi"
+                email: "budi@yahoo.com"
+                city: "papua"
+                phone: "08124124"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'           
+    put:
+        tags:
+          - "users"
+        description: untuk mengedit data user
+        security:
+          - Bearer: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                required:
+                  - "name"
+                type: object
+                properties:
+                  username:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  city:
+                    type: string
+                  phone:
+                    type: string
+        responses:
+          200:
+            description: berhasil hapus data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                example:
+                  message: "sukses update data"
+          404:
+            $ref: '#/components/responses/404'
+          400:
+            $ref: '#/components/responses/400'
+          500:
+            $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - "users"
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: berhasil hapus data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "sukses menghapus data"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+  /users/password:
+    put:
+      tags: 
+        - "users"
+      description: ganti user password
+      security:
+        - Bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                new_password: 
+                  type: string
+                      
+      responses:
+        200:
+          description: berhasil hapus data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "sukses menghapus data"
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+  /products:
+    post:
+      tags:
+        - "products"
+      description: untuk menambah produk
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                product_name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: integer
+                image:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: sukses menambahkan produk
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: "sukses menambahkan produk"
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - "products"
+      description: untuk melihat produk
+      responses:
+        200:
+          description: sukses melihat produk
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        product_name:
+                          type: string
+                        description:
+                          type: string
+                        seller_name:
+                          type: string
+                        city:
+                          type: string
+                        price:
+                          type: integer
+                        stock:
+                          type: integer
+                        created_date:
+                          type: string
+                        image:
+                          type: string
+                  message:
+                    type: string
+              example:
+                data:
+                  - product_id: 1
+                    product_name: "Yeezyyy"
+                    description:  "Newest Yeezy after Kanye got banned"
+                    seller_name:  "adidas"
+                    city: "riau"
+                    price:  6000000
+                    stock:  10
+                    image:  "cloudinary.com/thisyeezyexample.png"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    
+  /products/{product_id}:
+    put:
+      tags:
+        - "products"
+      description: untuk update product
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - Bearer : []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                description:
+                  type: string
+                stock:
+                  type: integer
+                image:
+                  type: string
+      responses:
+        200:
+          description: sukses mengganti produk
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: "sukses mengganti produk"
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - "products"
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: berhasil hapus data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "sukses menghapus data"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'  
+    
+  /carts:
+    post:
+      tags:
+        - "carts"
+      description: untuk menaruh produk ke keranjang
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+      responses:
+        200:
+          description: sukses menambahkan produk ke keranjang
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: "sukses menambahkan produk ke keranjang"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - "carts"
+      description: melihat keranjang
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: "sukses melihat keranjang"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObjectArr'
+              example:
+                data:
+                  - product_id: 1
+                    image: "cloudinary.com/aodsofhas"
+                    product_name: "Yeezy"
+                    seller_name: "Susi"
+                    price: 6000000
+                    quantity: 2
+                  - product_id: 2
+                    image: "cloudinary.com/aoaljfas"
+                    product_name: "Mercurial"
+                    seller_name: "Samsul"
+                    price: 2000000
+                    quantity: 1
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - "carts"
+      description: mengupdate keranjang
+      security:
+        - Bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        200:
+          description: "sukses mengupdate keranjang"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/responseObject'
+              example:
+                message: "sukses mengupdate data"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+ 
+  /carts/{product_id}:
+    delete:
+      tags:
+        - "carts"
+      description: menghapus produk di keranjang
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer 
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: "sukses menghapus produk di keranjang"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/responseObject'
+              example:
+                message: "sukses menghapus produk di keranjang"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'        
+
+  /orders:
+    post:  
+      tags:
+        - "orders"
+      description: memproses order
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+                user_id:
+                  type: integer
+                address:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        200:
+          description: "sukses memproses order"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/responseObject'
+              example:
+                message: "sukses memproses order"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'     
+
+    get:
+      tags:
+        - "orders"
+      description: melihat histori order
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: "sukses melihat histori order"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObjectArr'
+              example:
+                data:
+                  - order_id: 1
+                    invoice: "INV/0001/200123"
+                    order_date: "20-01-2023"
+                    order_status: "Awaiting Payment"
+                  - order_id: 2
+                    invoice: "INV/0002/210123"
+                    order_date: "21-01-2023"
+                    order_status: "Completed"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'     
+
+  /orders/{order_id}:
+    put:
+      tags:
+        - "orders"
+      description: untuk cancel order
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - Bearer : []
+      responses:
+        200:
+          description: "sukses membatalkan order"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/responseObject'
+              example:
+                message: "sukses membatalkan order"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'             
+
+
+
+                
+        
+          
+      
+
+
+
+
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+  schemas:
+    responseObject:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
+          type: string
+    responseObjectArr:
+      type: object
+      properties:
+        data:
+          type: array
+          items: 
+            type: object
+        message:
+          type: string
+  responses:
+    400:
+      description: "data tidak ditemukan"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "data tidak ditemukan"
+    404:
+      description: "Kesalahan dari user"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "kesalahan input"
+    500:
+      description: "Kesalahan dari server"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: "data tidak bisa diolah"
