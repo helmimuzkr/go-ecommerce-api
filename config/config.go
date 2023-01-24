@@ -22,7 +22,7 @@ type AppConfig struct {
 	DBHost                   string
 	DBPort                   int
 	DBName                   string
-	jwtKey                   string
+	JWT_KEY                  string
 	CLOUDINARY_CLOUD_NAME    string
 	CLOUDINARY_API_KEY       string
 	CLOUDINARY_API_SECRET    string
@@ -38,7 +38,7 @@ func ReadEnv() *AppConfig {
 	isRead := true
 
 	if val, found := os.LookupEnv("JWT_KEY"); found {
-		app.jwtKey = val
+		app.JWT_KEY = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DBUSER"); found {
@@ -95,8 +95,7 @@ func ReadEnv() *AppConfig {
 			return nil
 		}
 	}
-
-	JWT_KEY = app.jwtKey
+	JWT_KEY = app.JWT_KEY
 	CLOUDINARY_CLOUD_NAME = app.CLOUDINARY_CLOUD_NAME
 	CLOUDINARY_API_KEY = app.CLOUDINARY_API_KEY
 	CLOUDINARY_API_SECRET = app.CLOUDINARY_API_SECRET
