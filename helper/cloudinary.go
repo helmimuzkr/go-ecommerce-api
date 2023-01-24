@@ -2,6 +2,7 @@ package helper
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -16,6 +17,10 @@ func UploadFile(file interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// cld, err := cloudinary.NewFromParams("dnji8pgyl", "455139436831234", "iMQL2OVjJQKttb05He-r7pBN_8k")
+	// if err != nil {
+	// 	return "", err
+	// }
 
 	publicID := time.Now().Format("20060102-150405") // Format  "(YY-MM-DD)-(hh-mm-ss)""
 
@@ -29,6 +34,18 @@ func UploadFile(file interface{}) (string, error) {
 		})
 	if err != nil {
 		return "", err
+	}
+
+	// Pengecekan format file
+	format := uploadResult.Format
+	if format != "jpeg" && format != "png" && format != "jpg" {
+		cld.Upload.Destroy(
+			context.Background(),
+			uploader.DestroyParams{
+				PublicID: uploadResult.PublicID,
+			},
+		)
+		return "", errors.New("kesalahan input user karena format gambar bukan jpg, jpeg, ataupun png")
 	}
 
 	return uploadResult.SecureURL, nil
