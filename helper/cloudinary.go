@@ -12,7 +12,7 @@ import (
 )
 
 func UploadFile(file interface{}) (string, error) {
-	cld, err := cloudinary.NewFromParams(config.CloudinaryName, config.CloudinaryApiKey, config.CloudinaryApiScret)
+	cld, err := cloudinary.NewFromParams(config.CLOUDINARY_CLOUD_NAME, config.CLOUDINARY_API_KEY, config.CLOUDINARY_API_SECRET)
 	if err != nil {
 		return "", err
 	}
@@ -25,7 +25,7 @@ func UploadFile(file interface{}) (string, error) {
 		uploader.UploadParams{
 			PublicID:     publicID,
 			ResourceType: "image",
-			Folder:       config.CloudinaryUploadFolder,
+			Folder:       config.CLOUDINARY_UPLOAD_FOLDER,
 		})
 	if err != nil {
 		return "", err
@@ -46,7 +46,7 @@ func GetPublicID(secureURL string) string {
 }
 
 func DestroyFile(publicID string) error {
-	cld, err := cloudinary.NewFromParams(config.CloudinaryName, config.CloudinaryApiKey, config.CloudinaryApiScret)
+	cld, err := cloudinary.NewFromParams(config.CLOUDINARY_CLOUD_NAME, config.CLOUDINARY_API_KEY, config.CLOUDINARY_API_SECRET)
 	if err != nil {
 		return err
 	}
