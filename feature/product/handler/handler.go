@@ -34,11 +34,30 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
+		return c.JSON(helper.SuccessResponse(201, "sukses menambah produk"))
+	}
+}
+
+func (ph *productHandler) GetAll() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
-func (ph *productHandler) GetAll() echo.HandlerFunc
-func (ph *productHandler) GetByID() echo.HandlerFunc
-func (ph *productHandler) Update() echo.HandlerFunc
-func (ph *productHandler) Delete() echo.HandlerFunc
+func (ph *productHandler) GetByID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
+}
+
+func (ph *productHandler) Update() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
+}
+
+func (ph *productHandler) Delete() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
+}

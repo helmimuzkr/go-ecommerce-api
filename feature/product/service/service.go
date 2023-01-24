@@ -43,6 +43,8 @@ func (ps *productService) Add(token interface{}, newProduct product.Core, fileHe
 	}
 	newProduct.Image = secureURL
 
+	newProduct.Stock = 1
+
 	if err := ps.qry.Add(uint(userID), newProduct); err != nil {
 		return errors.New("kesalahan pada sistem server")
 	}
@@ -50,7 +52,18 @@ func (ps *productService) Add(token interface{}, newProduct product.Core, fileHe
 	return nil
 }
 
-func (ps *productService) GetAll(page uint) ([]product.Core, error)
-func (ps *productService) GetByID(productID uint) (product.Core, error)
-func (ps *productService) Update(token interface{}, productID uint, updateProduct product.Core, fileHeader *multipart.FileHeader) error
-func (ps *productService) Delete(token interface{}, productID uint) error
+func (ps *productService) GetAll(page uint) ([]product.Core, error) {
+	return nil, nil
+}
+
+func (ps *productService) GetByID(productID uint) (product.Core, error) {
+	return product.Core{}, nil
+}
+
+func (ps *productService) Update(token interface{}, productID uint, updateProduct product.Core, fileHeader *multipart.FileHeader) error {
+	return nil
+}
+
+func (ps *productService) Delete(token interface{}, productID uint) error {
+	return nil
+}

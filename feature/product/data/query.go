@@ -26,7 +26,17 @@ func (pd *productData) Add(userID uint, newProduct product.Core) error {
 	return nil
 }
 
-func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error)
-func (pd *productData) GetByID(productID uint) (product.Core, error)
-func (pd *productData) Update(userID uint, productID uint, updateProduct product.Core) error
-func (pd *productData) Delete(userID uint, productID uint) error
+func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error) {
+	return nil, nil
+}
+
+func (pd *productData) GetByID(productID uint) (product.Core, error) {
+	return product.Core{}, nil
+}
+
+func (pd *productData) Update(userID uint, productID uint, updateProduct product.Core) error {
+	return nil
+}
+func (pd *productData) Delete(userID uint, productID uint) error {
+	return nil
+}
