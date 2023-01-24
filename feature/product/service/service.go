@@ -4,7 +4,9 @@ import (
 	"e-commerce-api/feature/product"
 	"e-commerce-api/helper"
 	"errors"
+	"log"
 	"mime/multipart"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -14,32 +16,34 @@ type productService struct {
 	vld *validator.Validate
 }
 
-func NewProductService(d product.ProductData, v *validator.Validate) product.ProductService {
+func New(d product.ProductData, v *validator.Validate) product.ProductService {
 	return &productService{
 		qry: d,
 		vld: v,
 	}
 }
 
-func (ps *productService) Add(token interface{}, newProduct product.Core, fileHeader *multipart.FileHeader) error {
-	// userID := helper.ExtractToken(token)
-	// if userID <= 0 {
-	// 	errors.New("token tidak valid")
-	// }
-	userID := 1
+func (ps *productService) Add(token interface{}, newProduct product.Core, file multipart.File) error {
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return errors.New("token tidak valid")
+	}
 
 	if err := ps.vld.Struct(&newProduct); err != nil {
 		msg := helper.ValidationErrorHandle(err)
 		return errors.New(msg)
 	}
 
-	if fileHeader == nil {
-		return errors.New("kesalahan input pada user karena tidak mengunggah gambar produk")
-	}
-	file, _ := fileHeader.Open()
 	secureURL, err := helper.UploadFile(file)
 	if err != nil {
-		return errors.New("gagal upload gambar karena kesalahan pada sistem")
+		log.Println(err)
+		var msg string
+		if strings.Contains(err.Error(), "kesalahan input") {
+			msg = err.Error()
+		} else {
+			msg = "gagal upload gambar karena kesalahan pada sistem server"
+		}
+		return errors.New(msg)
 	}
 	newProduct.Image = secureURL
 
