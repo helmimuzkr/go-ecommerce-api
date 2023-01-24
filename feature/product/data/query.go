@@ -74,5 +74,14 @@ func (pd *productData) Update(userID uint, productID uint, updateProduct product
 }
 
 func (pd *productData) Delete(userID uint, productID uint) error {
+	tx := pd.db.Exec("UPDATE products SET deleted_at=CURRENT_TIMESTAMP, image='' WHERE id=? AND seller_id=?", productID, userID)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected <= 0 {
+		return errors.New("terjadi kesalahan pada server karena data user atau product tidak ditemukan")
+	}
+
 	return nil
 }

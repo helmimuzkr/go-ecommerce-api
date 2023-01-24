@@ -115,12 +115,21 @@ func (ph *productHandler) Update() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		return c.JSON(helper.SuccessResponse(201, "sukses menambah produk"))
+		return c.JSON(helper.SuccessResponse(200, "sukses update data produk"))
 	}
 }
 
 func (ph *productHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		token := c.Get("user")
+
+		str := c.Param("product_id")
+		productID, _ := strconv.Atoi(str)
+
+		if err := ph.srv.Delete(token, uint(productID)); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		return c.JSON(helper.SuccessResponse(200, "sukses hapus data produk"))
 	}
 }
