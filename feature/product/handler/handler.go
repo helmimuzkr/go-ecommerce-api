@@ -44,6 +44,7 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 
 func (ph *productHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
 		return nil
 	}
 }
