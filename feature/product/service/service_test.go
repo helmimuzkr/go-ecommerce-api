@@ -14,12 +14,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type testFile struct {
-	Fieldname string
-	Filename  string
-	Content   []byte
-}
-
 func TestAddProduct(t *testing.T) {
 	v := validator.New()
 	data := mocks.NewProductData(t)
@@ -34,8 +28,9 @@ func TestAddProduct(t *testing.T) {
 			Price:       500000,
 		}
 
-		strToken, _ := helper.GenerateToken(uint(1))
-		token := helper.ValidateToken(strToken)
+		_, raw := helper.GenerateJWT(1)
+		token := raw.(*jwt.Token)
+		token.Valid = true
 
 		file, _ := os.Open("./test.png")
 		defer file.Close()
@@ -70,8 +65,9 @@ func TestAddProduct(t *testing.T) {
 			Price:       500000,  // Minimal 10k
 		}
 
-		strToken, _ := helper.GenerateToken(uint(1))
-		token := helper.ValidateToken(strToken)
+		_, raw := helper.GenerateJWT(1)
+		token := raw.(*jwt.Token)
+		token.Valid = true
 
 		file, _ := os.Open("./test.png")
 		defer file.Close()
@@ -88,8 +84,9 @@ func TestAddProduct(t *testing.T) {
 			Description: "Buruan dah beli",
 			Price:       500000,
 		}
-		strToken, _ := helper.GenerateToken(uint(1))
-		token := helper.ValidateToken(strToken)
+		_, raw := helper.GenerateJWT(1)
+		token := raw.(*jwt.Token)
+		token.Valid = true
 
 		file, _ := os.Open("./false-test.pdf")
 		defer file.Close()
@@ -106,8 +103,9 @@ func TestAddProduct(t *testing.T) {
 			Description: "Buruan dah beli",
 			Price:       500000,
 		}
-		strToken, _ := helper.GenerateToken(uint(1))
-		token := helper.ValidateToken(strToken)
+		_, raw := helper.GenerateJWT(1)
+		token := raw.(*jwt.Token)
+		token.Valid = true
 
 		file, _ := os.Open("")
 		defer file.Close()
@@ -127,8 +125,9 @@ func TestAddProduct(t *testing.T) {
 			Price:       500000,
 		}
 
-		strToken, _ := helper.GenerateToken(uint(1))
-		token := helper.ValidateToken(strToken)
+		_, raw := helper.GenerateJWT(1)
+		token := raw.(*jwt.Token)
+		token.Valid = true
 
 		file, _ := os.Open("./test.png")
 		defer file.Close()
