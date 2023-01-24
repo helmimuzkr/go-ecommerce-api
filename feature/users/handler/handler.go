@@ -7,17 +7,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type userControll struct {
+type userControl struct {
 	srv users.UserService
 }
 
 func New(srv users.UserService) users.UserHandler {
-	return &userControll{
+	return &userControl{
 		srv: srv,
 	}
 }
 
-func (uc *userControll) Login() echo.HandlerFunc {
+func (uc *userControl) Login() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		input := LoginRequest{}
 		if err := c.Bind(&input); err != nil {
@@ -32,7 +32,7 @@ func (uc *userControll) Login() echo.HandlerFunc {
 		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil login", ToResponse(res), token))
 	}
 }
-func (uc *userControll) Register() echo.HandlerFunc {
+func (uc *userControl) Register() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		input := RegisterRequest{}
 		if err := c.Bind(&input); err != nil {
@@ -47,7 +47,7 @@ func (uc *userControll) Register() echo.HandlerFunc {
 		return c.JSON(PrintSuccessReponse(http.StatusCreated, "berhasil mendaftar", ToResponse(res)))
 	}
 }
-func (uc *userControll) Profile() echo.HandlerFunc {
+func (uc *userControl) Profile() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
@@ -60,27 +60,29 @@ func (uc *userControll) Profile() echo.HandlerFunc {
 	}
 }
 
-func (uc *userControll) Update() echo.HandlerFunc {
+func (uc *userControl) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
+		//
 		formHeader, err := c.FormFile("file")
 		if err != nil {
-			return c.JSON(
-				http.StatusInternalServerError,
-				helper.MediaDto{
-					StatusCode: http.StatusInternalServerError,
-					Message:    "error",
-					Data:       &echo.Map{"data": "Select a file to upload"},
-				})
+			return c.JSON(http.StatusBadRequest, "File is required")
 		}
 
 		token := c.Get("user")
 		input := UpdateRequest{}
+
+		//cek input json dengan format yang benar
 		if err := c.Bind(&input); err != nil {
 			return c.JSON(http.StatusBadRequest, "format inputan salah")
 		}
 
-		res, err := uc.srv.Update(token, *formHeader, *ReqToCore(input))
+		//validasi input data json
+		if err := validation.Validate(input); err != nil {
+			return c.JSON(http.StatusBadRequest, "Invalid input data")
+		}
+
+		res, err := uc.srv.Update(token, formHeader, *ReqToCore(input))
 		if err != nil {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
@@ -88,7 +90,7 @@ func (uc *userControll) Update() echo.HandlerFunc {
 	}
 }
 
-func (uc *userControll) Delete() echo.HandlerFunc {
+func (uc *userControl) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
@@ -98,5 +100,24 @@ func (uc *userControll) Delete() echo.HandlerFunc {
 		}
 
 		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil delete profil", err))
+	}
+}
+
+func (uc *userControl) UpdatePwd() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		token := c.Get("user")
+		newPassword := c.FormValue("new_password")
+
+		//validasi password
+		if newPassword == "" {
+			return c.JSON(PrintErrorResponse("password tidak boleh kosong"))
+		}
+
+		res, err := uc.srv.UpdatePwd(token, newPassword)
+		if err != nil {
+			return c.JSON(PrintErrorResponse(err.Error()))
+		}
+
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", PPToResponse(res)))
 	}
 }

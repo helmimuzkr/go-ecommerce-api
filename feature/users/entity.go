@@ -29,9 +29,9 @@ type UserService interface {
 	Login(username, password string) (string, Core, error)
 	Register(newUser Core) (Core, error)
 	Profile(token interface{}) (Core, error)
-	Update(token interface{}, file multipart.FileHeader, updateData Core) (Core, error)
+	Update(token interface{}, formHeader *multipart.FileHeader, updateData Core) (Core, error)
 	Delete(token interface{}) error
-	UpdatePwd(token interface{}) error
+	UpdatePwd(token interface{}, newPassword string) (Core, error)
 }
 
 type UserData interface {
