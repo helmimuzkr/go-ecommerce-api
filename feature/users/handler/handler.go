@@ -1,9 +1,8 @@
 package handler
 
 import (
+	"e-commerce-api/feature/users"
 	"net/http"
-	"socialmedia/features/users"
-	"socialmedia/helper"
 
 	"github.com/labstack/echo/v4"
 )

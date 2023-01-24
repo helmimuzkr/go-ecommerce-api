@@ -1,12 +1,12 @@
 package services
 
 import (
+	"e-commerce-api/config"
+	"e-commerce-api/feature/users"
+	"e-commerce-api/helper"
 	"errors"
 	"log"
 	"mime/multipart"
-	"socialmedia/config"
-	"socialmedia/features/users"
-	"socialmedia/helper"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -101,12 +101,12 @@ func (uuc *userUseCase) Update(token interface{}, file multipart.FileHeader, upd
 		return users.Core{}, errors.New("input tidak sesuai")
 	}
 
-	uploadUrl, err := helper.NewMediaUpload().FileUpload(helper.File{File: formFile})
+	uploadUrl, err := helper.UploadFile(formFile)
 	if err != nil {
 		return users.Core{}, errors.New("input tidak sesuai")
 	}
 
-	updateData.Userpp = uploadUrl
+	updateData.Avatar = uploadUrl
 
 	res, err := uuc.qry.Update(uint(id), updateData)
 	if err != nil {
@@ -123,6 +123,26 @@ func (uuc *userUseCase) Update(token interface{}, file multipart.FileHeader, upd
 }
 
 func (uuc *userUseCase) Delete(token interface{}) error {
+	id := helper.ExtractToken(token)
+	if id <= 0 {
+		return errors.New("data not found")
+	}
+
+	err := uuc.qry.Delete(uint(id))
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terdapat masalah pada server"
+		}
+		return errors.New(msg)
+	}
+
+	return nil
+}
+
+func (uuc *userUseCase) UpdatePwd(token interface{}) error {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
 		return errors.New("data not found")
