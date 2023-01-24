@@ -2,6 +2,7 @@ package data
 
 import (
 	"e-commerce-api/feature/product"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -27,14 +28,14 @@ func (pd *productData) Add(userID uint, newProduct product.Core) error {
 }
 
 func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error) {
-	products := []UserProduct{}
-	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
-	txProduct := pd.db.Raw(query, limit, offset).Find(&products)
+	up := []UserProduct{}
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	txProduct := pd.db.Raw(query, limit, offset).Find(&up)
 	if txProduct.Error != nil {
 		return nil, txProduct.Error
 	}
 
-	return ToSliceCore(products), nil
+	return ToSliceCore(up), nil
 }
 
 func (pd *productData) CountProduct() (int, error) {
@@ -49,7 +50,7 @@ func (pd *productData) CountProduct() (int, error) {
 
 func (pd *productData) GetByID(productID uint) (product.Core, error) {
 	up := UserProduct{}
-	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.id = ?"
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL AND products.id = ?"
 	tx := pd.db.Raw(query, productID).First(&up)
 	if tx.Error != nil {
 		return product.Core{}, tx.Error
@@ -59,8 +60,19 @@ func (pd *productData) GetByID(productID uint) (product.Core, error) {
 }
 
 func (pd *productData) Update(userID uint, productID uint, updateProduct product.Core) error {
+	up := ToData(updateProduct)
+	tx := pd.db.Model(&Product{}).Where("id = ? AND seller_id = ? AND deleted_at IS NULL", productID, userID).Updates(&up)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected <= 0 {
+		return errors.New("terjadi kesalahan pada server karena data user atau product tidak ditemukan")
+	}
+
 	return nil
 }
+
 func (pd *productData) Delete(userID uint, productID uint) error {
 	return nil
 }

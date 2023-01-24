@@ -3,6 +3,7 @@ package handler
 import (
 	"e-commerce-api/feature/product"
 	"e-commerce-api/helper"
+	"mime/multipart"
 	"strconv"
 
 	"github.com/jinzhu/copier"
@@ -21,7 +22,7 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
-		pr := productRequest{}
+		pr := addProductReq{}
 		if err := c.Bind(&pr); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
@@ -91,7 +92,30 @@ func (ph *productHandler) GetByID() echo.HandlerFunc {
 
 func (ph *productHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		token := c.Get("user")
+
+		str := c.Param("product_id")
+		productID, _ := strconv.Atoi(str)
+
+		pr := updateProductReq{}
+		if err := c.Bind(&pr); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		fileHeader, _ := c.FormFile("image")
+		var file multipart.File
+		if fileHeader != nil {
+			file, _ = fileHeader.Open()
+		}
+
+		pc := product.Core{}
+		copier.Copy(&pc, &pr)
+
+		if err := ph.srv.Update(token, uint(productID), pc, file); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		return c.JSON(helper.SuccessResponse(201, "sukses menambah produk"))
 	}
 }
 
