@@ -8,11 +8,11 @@ import (
 
 type Core struct {
 	ID          uint
-	Name        string
-	Description string
+	Name        string `validate:"min=3"`
+	Description string `validate:"min=5"`
 	SellerName  string
 	City        string
-	Price       int
+	Price       int `validate:"gte=10000"`
 	Stock       int
 	Image       string
 }
@@ -26,7 +26,7 @@ type ProductHandler interface {
 }
 
 type ProductService interface {
-	Add(token interface{}, newProduct Core, fileHeader *multipart.FileHeader) error
+	Add(token interface{}, newProduct Core, fileHeader multipart.File) error
 	GetAll(page uint) ([]Core, error)
 	GetByID(productID uint) (Core, error)
 	Update(token interface{}, productID uint, updateProduct Core, fileHeader *multipart.FileHeader) error
