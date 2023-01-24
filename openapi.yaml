@@ -5,6 +5,9 @@ info:
     API untuk E-Commerce Project
   version: 1.0.0
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/audizzy/ecommerce/1.0.0
   - url : https://kicks.com
     description: digunakan untuk ujicoba
 tags:
@@ -790,17 +793,6 @@ paths:
           $ref: '#/components/responses/400'
         500:
           $ref: '#/components/responses/500'             
-
-
-
-                
-        
-          
-      
-
-
-
-
 components:
   securitySchemes:
     Bearer:
