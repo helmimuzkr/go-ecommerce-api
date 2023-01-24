@@ -27,6 +27,27 @@ func (_m *ProductData) Add(userID uint, newProduct product.Core) error {
 	return r0
 }
 
+// CountProduct provides a mock function with given fields:
+func (_m *ProductData) CountProduct() (int, error) {
+	ret := _m.Called()
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: userID, productID
 func (_m *ProductData) Delete(userID uint, productID uint) error {
 	ret := _m.Called(userID, productID)
