@@ -20,9 +20,9 @@ func main() {
 
 	v := validator.New()
 
-	productData := _productData.NewProductData(db)
-	productService := _productService.NewProductService(productData, v)
-	productHandler := _productHandler.NewProductHandler(productService)
+	productData := _productData.New(db)
+	productService := _productService.New(productData, v)
+	productHandler := _productHandler.New(productService)
 
 	e := echo.New()
 
