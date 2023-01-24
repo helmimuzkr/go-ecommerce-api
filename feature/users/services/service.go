@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userUseCase struct {
@@ -90,24 +91,48 @@ func (uuc *userUseCase) Profile(token interface{}) (users.Core, error) {
 	return res, nil
 }
 
-func (uuc *userUseCase) Update(token interface{}, file multipart.FileHeader, updateData users.Core) (users.Core, error) {
+func (uuc *userUseCase) Update(token interface{}, formHeader *multipart.FileHeader, updateData users.Core) (users.Core, error) {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
 		return users.Core{}, errors.New("data not found")
 	}
-
-	formFile, err := file.Open()
+	//ambil user data
+	user, err := uuc.qry.Profile(uint(id))
 	if err != nil {
-		return users.Core{}, errors.New("input tidak sesuai")
+		return users.Core{}, err
 	}
 
-	uploadUrl, err := helper.UploadFile(formFile)
-	if err != nil {
-		return users.Core{}, errors.New("input tidak sesuai")
+	//ambil avatar ID
+	oldAvatarPublicID := helper.GetPublicID(user.Avatar)
+
+	if formHeader != nil {
+		// cek fie yang di upload
+		formFile, err := formHeader.Open()
+		if err != nil {
+			return users.Core{}, errors.New("input tidak sesuai")
+		}
+
+		uploadUrl, err := helper.UploadFile(formFile)
+		if err != nil {
+			return users.Core{}, errors.New("input tidak sesuai")
+		}
+
+		//ambil avatar ID baru
+		newAvatarPublicID := helper.GetPublicID(uploadUrl)
+
+		if newAvatarPublicID != oldAvatarPublicID {
+			// hapus avatar lama
+			err = helper.DestroyFile(oldAvatarPublicID)
+			if err != nil {
+				return users.Core{}, err
+			}
+		}
+		updateData.Avatar = uploadUrl
+	} else {
+		updateData.Avatar = user.Avatar
 	}
 
-	updateData.Avatar = uploadUrl
-
+	//update user data
 	res, err := uuc.qry.Update(uint(id), updateData)
 	if err != nil {
 		msg := ""
@@ -142,22 +167,24 @@ func (uuc *userUseCase) Delete(token interface{}) error {
 	return nil
 }
 
-func (uuc *userUseCase) UpdatePwd(token interface{}) error {
+func (uuc *userUseCase) UpdatePwd(token interface{}, newPassword string) (users.Core, error) {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
-		return errors.New("data not found")
+		return users.Core{}, errors.New("data not found")
 	}
-
-	err := uuc.qry.Delete(uint(id))
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return users.Core{}, err
+	}
+	err = uuc.qry.UpdatePwd(uint(id), string(hashedPassword))
 	if err != nil {
 		msg := ""
 		if strings.Contains(err.Error(), "not found") {
-			msg = "data tidak ditemukan"
+			msg = "data not found"
 		} else {
-			msg = "terdapat masalah pada server"
+			msg = "server error"
 		}
-		return errors.New(msg)
+		return users.Core{}, errors.New(msg)
 	}
-
-	return nil
+	return users.Core{}, nil
 }
