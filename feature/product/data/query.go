@@ -27,7 +27,35 @@ func (pd *productData) Add(userID uint, newProduct product.Core) error {
 }
 
 func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error) {
-	return nil, nil
+	dp := []Product{}
+	du := []User{}
+
+	queryProduct := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	txProduct := pd.db.Raw(queryProduct, limit, offset).Find(&dp)
+	if txProduct.Error != nil {
+		return nil, txProduct.Error
+	}
+
+	// query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.id, users.name, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	queryUser := "SELECT users.id, users.name, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	txUser := pd.db.Raw(queryUser, limit, offset).Find(&du)
+	if txUser.Error != nil {
+		return nil, txUser.Error
+	}
+
+	cores := ToSliceCore(dp, du)
+
+	return cores, nil
+}
+
+func (pd *productData) CountProduct() (int, error) {
+	var total int
+	tx := pd.db.Raw("SELECT COUNT(id) FROM products WHERE deleted_at IS NULL").Find(&total)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+
+	return total, nil
 }
 
 func (pd *productData) GetByID(productID uint) (product.Core, error) {

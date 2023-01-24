@@ -3,6 +3,7 @@ package handler
 import (
 	"e-commerce-api/feature/product"
 	"e-commerce-api/helper"
+	"strconv"
 
 	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
@@ -44,12 +45,38 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 
 func (ph *productHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		str := c.QueryParam("page")
+		page, _ := strconv.Atoi(str)
+
+		p, res, err := ph.srv.GetAll(page)
+		if err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		paginate := pagination{
+			Page:        p["page"].(int),
+			Limit:       p["limit"].(int),
+			Offset:      p["offset"].(int),
+			TotalRecord: p["totalRecord"].(int),
+			TotalPage:   p["totalPage"].(int),
+		}
+
+		productResp := ToResponse(res)
+
+		webResponse := productWithPagination{
+			Pagination: paginate,
+			Data:       productResp,
+			Message:    "sukses menampilkan data",
+		}
+
+		return c.JSON(200, webResponse)
 	}
 }
 
 func (ph *productHandler) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		
 		return nil
 	}
 }

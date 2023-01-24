@@ -50,14 +50,46 @@ func (ps *productService) Add(token interface{}, newProduct product.Core, file m
 	newProduct.Stock = 1
 
 	if err := ps.qry.Add(uint(userID), newProduct); err != nil {
-		return errors.New("kesalahan pada sistem server")
+		return errors.New("terjadi kesalahan pada sistem server")
 	}
 
 	return nil
 }
 
-func (ps *productService) GetAll(page uint) ([]product.Core, error) {
-	return nil, nil
+// func (ps *productService) GetPagination(page uint) (map[string]interface{}, error) {
+
+// }
+
+func (ps *productService) GetAll(page int) (map[string]interface{}, []product.Core, error) {
+	// Total record
+	totalRecord, _ := ps.qry.CountProduct()
+	// Limit
+	limit := 10
+	// Total pages
+	totalPage := totalRecord / limit
+	if page >= totalPage {
+		page = totalPage
+	}
+	if page < 2 {
+		page = 1
+	}
+	// Calculate offset
+	offset := (page - 1) * limit
+
+	pagination := make(map[string]interface{})
+	pagination["page"] = page
+	pagination["limit"] = limit
+	pagination["offset"] = offset
+	pagination["totalRecord"] = totalRecord
+	pagination["totalPage"] = totalPage
+
+	res, err := ps.qry.GetAll(limit, offset)
+	if err != nil {
+		log.Println(err)
+		return nil, nil, errors.New("terjadi kesalahan pada sistem server")
+	}
+
+	return pagination, res, nil
 }
 
 func (ps *productService) GetByID(productID uint) (product.Core, error) {

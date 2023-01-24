@@ -28,6 +28,7 @@ type User struct {
 	gorm.Model
 	Name     string
 	City     string
+	Avatar   string
 	Products []Product `gorm:"foreignKey:SellerID"`
 }
 
@@ -44,11 +45,15 @@ func ToData(core product.Core) Product {
 
 func ToCore(p Product, u User) product.Core {
 	return product.Core{
-		ID:          p.ID,
-		Name:        p.Name,
-		SellerName:  u.Name,
+		ID:   p.ID,
+		Name: p.Name,
+		Seller: product.Seller{
+			ID:     u.ID,
+			Name:   u.Name,
+			City:   u.City,
+			Avatar: u.Avatar,
+		},
 		Description: p.Description,
-		City:        u.City,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		Image:       p.Image,
