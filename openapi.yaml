@@ -1,852 +1,862 @@
 openapi: 3.0.3
 info:
-  title: E-Commerce
-  description: |-
-    API untuk E-Commerce Project
-  version: 1.0.0
+    title: E-Commerce
+    description: |-
+        API untuk E-Commerce Project
+    version: 1.0.0
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/audizzy/ecommerce/1.0.0
-  - url : https://kicks.com
-    description: digunakan untuk ujicoba
+    # Added by API Auto Mocking Plugin
+    - description: SwaggerHub API Auto Mocking
+      url: https://virtserver.swaggerhub.com/audizzy/ecommerce/1.0.0
+    - url: https://kicks.com
+      description: digunakan untuk ujicoba
 tags:
-  - name : users
-  - name : products
-  - name : carts
-  - name : orders
+    - name: users
+    - name: products
+    - name: carts
+    - name: orders
 paths:
-  /register:
-    post:
-      tags:
-        - "users"
-      description: registrasi users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                name: 
-                  type: string
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string 
-            example:
-              username: budidi
-              name: budi
-              email: budi@yahoo.com
-              password: "budi123"
-      responses:
-        201:
-          description: "berhasil"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: "sukses menambahkan data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/400'
-  /login:
-    post:
-      tags:
-        - users
-      description: "untuk melakukan login"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-                  format: password
-      responses:
-        200:
-          description: berhasil login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responseObject'
-              example:
-                data:
-                  id: 1
-                  username: budi
-                  email: budi@yahoo.com
-                  token: "locm2u32u89fhdu8w7fi"
-                message: "sukses login"
-        404:
-          $ref: '#/components/responses/404'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'   
-  /users:
-    get:
-      tags:
-        - "users"
-      description: untuk melihat profile user
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: "sukses melihat data"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responseObject'
-              example:
-                data:
-                  username: "budidi"
-                  name: "budi fasola"
-                  email: "budi@yahoo.com"
-                  city: "papua"
-                  phone: "08124124"
-                  product:
-                    - product_id: 2
-                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                      product_name: "Mercurial"
-                      price: 2000000
-                      stock: 10
-                    - product_id: 3
-                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                      product_name: "Mercurial"
-                      price: 2000000
-                      stock: 10
-                message: "sukses menampilkan data"
+    /register:
+        post:
+            tags:
+                - "users"
+            description: registrasi users
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+                        example:
+                            username: budidi
+                            name: budi
+                            email: budi@yahoo.com
+                            password: "budi123"
+            responses:
+                201:
+                    description: "berhasil"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            example:
+                                message: "sukses menambahkan data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/400"
+    /login:
+        post:
+            tags:
+                - users
+            description: "untuk melakukan login"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                password:
+                                    type: string
+                                    format: password
+            responses:
+                200:
+                    description: berhasil login
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                data:
+                                    id: 1
+                                    username: budi
+                                    email: budi@yahoo.com
+                                    token: "locm2u32u89fhdu8w7fi"
+                                message: "sukses login"
+                404:
+                    $ref: "#/components/responses/404"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /users:
+        get:
+            tags:
+                - "users"
+            description: untuk melihat profile user
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses melihat data"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                data:
+                                    username: "budidi"
+                                    name: "budi fasola"
+                                    email: "budi@yahoo.com"
+                                    city: "papua"
+                                    phone: "08124124"
+                                    product:
+                                        - product_id: 2
+                                          image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                          product_name: "Mercurial"
+                                          price: 2000000
+                                          stock: 10
+                                        - product_id: 3
+                                          image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                          product_name: "Mercurial"
+                                          price: 2000000
+                                          stock: 10
+                                message: "sukses menampilkan data"
 
-        404:
-          $ref: '#/components/responses/404'
-        500:
-          $ref: '#/components/responses/500'           
-    put:
-        tags:
-          - "users"
-        description: untuk mengedit data user
-        security:
-          - Bearer: []
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                required:
-                  - "name"
-                type: object
-                properties:
-                  username:
-                    type: string
-                  name:
-                    type: string
-                  email:
-                    type: string
-                  city:
-                    type: string
-                  phone:
-                    type: string
-        responses:
-          200:
-            description: berhasil hapus data
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                example:
-                  message: "sukses update data"
-          404:
-            $ref: '#/components/responses/404'
-          400:
-            $ref: '#/components/responses/400'
-          500:
-            $ref: '#/components/responses/500'
-    delete:
-      tags:
-        - "users"
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: berhasil hapus data
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: "sukses menghapus data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-  /password:
-    put:
-      tags: 
-        - "users"
-      description: ganti user password
-      security:
-        - Bearer: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                old_password:
-                  type: string
-                new_password: 
-                  type: string
-                      
-      responses:
-        200:
-          description: berhasil hapus data
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: "sukses menghapus data"
-        404:
-          $ref: '#/components/responses/404'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-  /products:
-    post:
-      tags:
-        - "products"
-      description: untuk menambah produk
-      security:
-        - Bearer: []
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                product_id:
-                  type: integer
-                product_name:
-                  type: string
-                description:
-                  type: string
-                price:
-                  type: integer
-                image:
-                  type: string
-                  format: binary
-      responses:
-        200:
-          description: sukses menambahkan produk
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                message: "sukses menambahkan produk"
-        404:
-          $ref: '#/components/responses/404'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-    get:
-      tags:
-        - "products"
-      description: untuk melihat produk
-      parameters:
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-      responses:
-        200:
-          description: sukses melihat produk
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        product_id:
-                          type: integer
-                        product_name:
-                          type: string
-                        seller_name:
-                          type: string
-                        city:
-                          type: string
-                        price:
-                          type: integer
-                        image:
-                          type: string
-                  message:
-                    type: string
-              example:
-                data:
-                  - product_id: 1
-                    product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 2
-                    product_name: "Mercurial"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 3
-                    product_name: "Predator"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 4
-                    product_name: "Yeezyyy"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 5
-                    product_name: "Mercurial"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 6
-                    product_name: "Predator"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 7
-                    product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 8
-                    product_name: "Mercurial"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 9
-                    product_name: "Predator"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 10
-                    product_name: "Yeezyyy"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 11
-                    product_name: "Mercurial"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
-                  - product_id: 12
-                    product_name: "Predator"
-                    seller_name:  "adidas"
-                    city: "riau"
-                    price:  6000000
-                    image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
-                message: "sukses menampilkan data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-    
-  /products/{product_id}:
-    get:
-      tags:
-        - "products"
-      description: untuk melihat detail produk
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: sukses melihat detail produk
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        product_id:
-                          type: integer
-                        product_name:
-                          type: string
-                        description:
-                          type: string
-                        seller_name:
-                          type: string
-                        city:
-                          type: string
-                        price:
-                          type: integer
-                        stock:
-                          type: integer
-                        created_date:
-                          type: string
-                        image:
-                          type: string
-                  message:
-                    type: string
-              example:
-                data: 
-                  product_id: 1
-                  product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                  seller_name:  "adidas"
-                  description:  "You can't help but look cool in low tops that meld high-end craft with high-tech features. Airy Ripstop and soft, synthetic suede pair with a smooth interior. The result? Classic low-top looks and the premium comfort you expect from Jordan Brand."
-                  city: "riau"
-                  price:  6000000
-                  stock:  10
-                  created_date: "20-12-22"
-                  image:  "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                message: "sukses mengganti produk"
-                
-    put:
-      tags:
-        - "products"
-      description: untuk update product
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer : []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                product_name:
-                  type: string
-                description:
-                  type: string
-                stock:
-                  type: integer
-                image:
-                  type: string
-      responses:
-        200:
-          description: sukses mengganti produk
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                message: "sukses mengganti produk"
-        404:
-          $ref: '#/components/responses/404'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-    delete:
-      tags:
-        - "products"
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: berhasil hapus data
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: "sukses menghapus data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'  
-    
-  /carts:
-    post:
-      tags:
-        - "carts"
-      description: untuk menaruh produk ke keranjang
-      security:
-        - Bearer: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                product_id:
-                  type: integer
-      responses:
-        200:
-          description: sukses menambahkan produk ke keranjang
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                data:
-                  cart_id: 2
-                  product_id: 4
-                message: "sukses menambahkan produk ke keranjang"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-    get:
-      tags:
-        - "carts"
-      description: melihat keranjang
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: "sukses melihat keranjang"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responseObjectArr'
-              example:
-                data:
-                  - product_id: 1
-                    image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                    product_name: "Yeezy"
-                    seller_name: "Susi"
-                    price: 6000000
-                    quantity: 2
-                    stock: 10
-                  - product_id: 2
-                    image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                    product_name: "Mercurial"
-                    seller_name: "Samsul"
-                    price: 2000000
-                    quantity: 1
-                    stock: 10
-                message: "sukses melihat keranjang"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-  /carts/{cart_id}:  
-    put:
-      tags:
-        - "carts"
-      description: mengupdate keranjang
-      parameters:
-        - name: cart_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                product_id:
-                  type: integer
-                quantity:
-                  type: integer
-      responses:
-        200:
-          description: "sukses mengupdate keranjang"
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/responseObject'
-              example:
-                message: "sukses mengupdate data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-    delete:
-      tags:
-        - "carts"
-      description: menghapus produk di keranjang
-      parameters:
-        - name: cart_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: "sukses menghapus produk di keranjang"
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/responseObject'
-              example:
-                message: "sukses menghapus produk di keranjang"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'        
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+        put:
+            tags:
+                - "users"
+            description: untuk mengedit data user
+            security:
+                - Bearer: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            required:
+                                - "name"
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                city:
+                                    type: string
+                                phone:
+                                    type: string
+            responses:
+                200:
+                    description: berhasil hapus data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            example:
+                                message: "sukses update data"
+                404:
+                    $ref: "#/components/responses/404"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        delete:
+            tags:
+                - "users"
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: berhasil hapus data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            example:
+                                message: "sukses menghapus data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /password:
+        put:
+            tags:
+                - "users"
+            description: ganti user password
+            security:
+                - Bearer: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                old_password:
+                                    type: string
+                                new_password:
+                                    type: string
 
-  /orders:
-    post:  
-      tags:
-        - "orders"
-      description: memproses order
-      security:
-        - Bearer: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-                type: object
-                properties:
-                  cart:
-                    type: array
-                    items: 
-                      type: object
-                  message:
-                    type: string        
-            example:
-              cart:
-                - cart_id: integer
-                  product_id: integer
-                  quantity: integer
-                  subtotal:    integer
-                - cart_id: integer
-                  product_id: integer
-                  quantity: integer
-                  subtotal:    integer
-                    
-      responses:
-        200:
-          description: "sukses memproses order"
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/responseObject'
-              example:
-                data:
-                  payment_link: "linkforpayment.com/osdhfs0m3r4nd0Mt0K3N"
-                message: "sukses memproses order"
-                
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'     
+            responses:
+                200:
+                    description: berhasil hapus data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            example:
+                                message: "sukses menghapus data"
+                404:
+                    $ref: "#/components/responses/404"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /products:
+        post:
+            tags:
+                - "products"
+            description: untuk menambah produk
+            security:
+                - Bearer: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                product_name:
+                                    type: string
+                                description:
+                                    type: string
+                                price:
+                                    type: integer
+                                image:
+                                    type: string
+                                    format: binary
+            responses:
+                200:
+                    description: sukses menambahkan produk
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                message: "sukses menambahkan produk"
+                404:
+                    $ref: "#/components/responses/404"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        get:
+            tags:
+                - "products"
+            description: untuk melihat produk
+            parameters:
+                - name: page
+                  in: query
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    description: sukses melihat produk
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    pagination:
+                                        type: object
+                                        properties:
+                                            page:
+                                                type: integer
+                                            limit:
+                                                type: integer
+                                            offset:
+                                                type: integer
+                                            total_record:
+                                                type: integer
+                                            total_page:
+                                                type: integer
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                product_id:
+                                                    type: integer
+                                                product_name:
+                                                    type: string
+                                                seller_name:
+                                                    type: string
+                                                city:
+                                                    type: string
+                                                price:
+                                                    type: integer
+                                                image:
+                                                    type: string
+                                    message:
+                                        type: string
+                            example:
+                                pagination:
+                                    page: 1
+                                    limit: 10
+                                    offset: 0
+                                    total_record: 20
+                                    total_page: 2
+                                data:
+                                    - product_id: 1
+                                      product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 2
+                                      product_name: "Mercurial"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 3
+                                      product_name: "Predator"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 4
+                                      product_name: "Yeezyyy"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 5
+                                      product_name: "Mercurial"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 6
+                                      product_name: "Predator"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 7
+                                      product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 8
+                                      product_name: "Mercurial"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 9
+                                      product_name: "Predator"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 10
+                                      product_name: "Yeezyyy"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 11
+                                      product_name: "Mercurial"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                    - product_id: 12
+                                      product_name: "Predator"
+                                      seller_name: "adidas"
+                                      city: "riau"
+                                      price: 6000000
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                message: "sukses menampilkan data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /products/{product_id}:
+        get:
+            tags:
+                - "products"
+            description: untuk melihat detail produk
+            parameters:
+                - name: product_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    description: sukses melihat detail produk
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                product_id:
+                                                    type: integer
+                                                product_name:
+                                                    type: string
+                                                description:
+                                                    type: string
+                                                seller_name:
+                                                    type: string
+                                                city:
+                                                    type: string
+                                                price:
+                                                    type: integer
+                                                stock:
+                                                    type: integer
+                                                created_date:
+                                                    type: string
+                                                image:
+                                                    type: string
+                                    message:
+                                        type: string
+                            example:
+                                data:
+                                    product_id: 1
+                                    product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                    seller_name: "adidas"
+                                    description: "You can't help but look cool in low tops that meld high-end craft with high-tech features. Airy Ripstop and soft, synthetic suede pair with a smooth interior. The result? Classic low-top looks and the premium comfort you expect from Jordan Brand."
+                                    city: "riau"
+                                    price: 6000000
+                                    stock: 10
+                                    created_date: "20-12-22"
+                                    image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                message: "sukses mengganti produk"
+        put:
+            tags:
+                - "products"
+            description: untuk update product
+            parameters:
+                - name: product_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                product_name:
+                                    type: string
+                                description:
+                                    type: string
+                                stock:
+                                    type: integer
+                                image:
+                                    type: string
+            responses:
+                200:
+                    description: sukses mengganti produk
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                message: "sukses mengganti produk"
+                404:
+                    $ref: "#/components/responses/404"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        delete:
+            tags:
+                - "products"
+            parameters:
+                - name: product_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: berhasil hapus data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            example:
+                                message: "sukses menghapus data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /carts:
+        post:
+            tags:
+                - "carts"
+            description: untuk menaruh produk ke keranjang
+            security:
+                - Bearer: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                product_id:
+                                    type: integer
+            responses:
+                200:
+                    description: sukses menambahkan produk ke keranjang
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                data:
+                                    cart_id: 2
+                                    product_id: 4
+                                message: "sukses menambahkan produk ke keranjang"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        get:
+            tags:
+                - "carts"
+            description: melihat keranjang
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses melihat keranjang"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObjectArr"
+                            example:
+                                data:
+                                    - product_id: 1
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                      product_name: "Yeezy"
+                                      seller_name: "Susi"
+                                      price: 6000000
+                                      quantity: 2
+                                      stock: 10
+                                    - product_id: 2
+                                      image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
+                                      product_name: "Mercurial"
+                                      seller_name: "Samsul"
+                                      price: 2000000
+                                      quantity: 1
+                                      stock: 10
+                                message: "sukses melihat keranjang"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /carts/{cart_id}:
+        put:
+            tags:
+                - "carts"
+            description: mengupdate keranjang
+            parameters:
+                - name: cart_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                product_id:
+                                    type: integer
+                                quantity:
+                                    type: integer
+            responses:
+                200:
+                    description: "sukses mengupdate keranjang"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                message: "sukses mengupdate data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        delete:
+            tags:
+                - "carts"
+            description: menghapus produk di keranjang
+            parameters:
+                - name: cart_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses menghapus produk di keranjang"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                message: "sukses menghapus produk di keranjang"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /orders:
+        post:
+            tags:
+                - "orders"
+            description: memproses order
+            security:
+                - Bearer: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                cart:
+                                    type: array
+                                    items:
+                                        type: object
+                                message:
+                                    type: string
+                        example:
+                            cart:
+                                - cart_id: integer
+                                  product_id: integer
+                                  quantity: integer
+                                  subtotal: integer
+                                - cart_id: integer
+                                  product_id: integer
+                                  quantity: integer
+                                  subtotal: integer
 
-    get:
-      tags:
-        - "orders"
-      description: melihat histori status order
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: "sukses melihat histori status order"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responseObjectArr'
-              example:
-                data:
-                  - order_id: 1
-                    invoice: "INV/0001/200123"
-                    order_date: "20-01-2023"
-                    order_status: "Awaiting Payment"
-                  - order_id: 2
-                    invoice: "INV/0002/210123"
-                    order_date: "21-01-2023"
-                    order_status: "Completed"
-                message: "sukses update data"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'     
+            responses:
+                200:
+                    description: "sukses memproses order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                data:
+                                    payment_link: "linkforpayment.com/osdhfs0m3r4nd0Mt0K3N"
+                                message: "sukses memproses order"
 
-  /orders/{order_id}:
-    get:
-      tags:
-        - "orders"
-      description: melihat histori order
-      parameters:
-        - name: order_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer: []
-      responses:
-        200:
-          description: "sukses melihat detail order"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responseObjectArr'
-              example:
-                data:
-                  invoice: INV/0001/200123
-                  name: budi
-                  address: jl. setiabudi, timor leste
-                  phone: 0923852
-                  order_status: 1
-                  order_date: "21-12-22"
-                  paid_date: "21-12-22"
-                  product_list:
-                    - product_id: 1
-                      product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                      seller_name:  "adidas"
-                      city: "riau"
-                      price:  6000000
-                      quantity: 1
-                    - product_id: 2
-                      product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                      seller_name:  "adidas"
-                      city: "riau"
-                      price:  1000000
-                      quantity: 1
-                  total: 7000000
-                message: "sukses melihat detail order"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'  
-
-    put:
-      tags:
-        - "orders"
-      description: untuk cancel order
-      parameters:
-        - name: order_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      security:
-        - Bearer : []
-      responses:
-        200:
-          description: "sukses membatalkan order"
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/responseObject'
-              example:
-                message: "sukses membatalkan order"
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'             
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        get:
+            tags:
+                - "orders"
+            description: melihat histori status order
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses melihat histori status order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObjectArr"
+                            example:
+                                data:
+                                    - order_id: 1
+                                      invoice: "INV/0001/200123"
+                                      order_date: "20-01-2023"
+                                      order_status: "Awaiting Payment"
+                                    - order_id: 2
+                                      invoice: "INV/0002/210123"
+                                      order_date: "21-01-2023"
+                                      order_status: "Completed"
+                                message: "sukses update data"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /orders/{order_id}:
+        get:
+            tags:
+                - "orders"
+            description: melihat histori order
+            parameters:
+                - name: order_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses melihat detail order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObjectArr"
+                            example:
+                                data:
+                                    invoice: INV/0001/200123
+                                    name: budi
+                                    address: jl. setiabudi, timor leste
+                                    phone: 0923852
+                                    order_status: 1
+                                    order_date: "21-12-22"
+                                    paid_date: "21-12-22"
+                                    product_list:
+                                        - product_id: 1
+                                          product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                          seller_name: "adidas"
+                                          city: "riau"
+                                          price: 6000000
+                                          quantity: 1
+                                        - product_id: 2
+                                          product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                          seller_name: "adidas"
+                                          city: "riau"
+                                          price: 1000000
+                                          quantity: 1
+                                    total: 7000000
+                                message: "sukses melihat detail order"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+        put:
+            tags:
+                - "orders"
+            description: untuk cancel order
+            parameters:
+                - name: order_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "sukses membatalkan order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                message: "sukses membatalkan order"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
 components:
-  securitySchemes:
-    Bearer:
-      type: http
-      bearerFormat: JWT
-      scheme: bearer
-  schemas:
-    responseObject:
-      type: object
-      properties:
-        data:
-          type: object
-        message:
-          type: string
-    responseObjectArr:
-      type: object
-      properties:
-        data:
-          type: array
-          items: 
-            type: object
-        message:
-          type: string
-  responses:
-    404:
-      description: "data tidak ditemukan"
-      content:
-        application/json:
-          schema:
+    securitySchemes:
+        Bearer:
+            type: http
+            bearerFormat: JWT
+            scheme: bearer
+    schemas:
+        responseObject:
             type: object
             properties:
-              message:
-                type: string
-          example:
-            message: "data tidak ditemukan"
-    400:
-      description: "Kesalahan dari user"
-      content:
-        application/json:
-          schema:
+                data:
+                    type: object
+                message:
+                    type: string
+        responseObjectArr:
             type: object
             properties:
-              message:
-                type: string
-          example:
-            message: "kesalahan input"
-    500:
-      description: "Kesalahan dari server"
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: "data tidak bisa diolah"
+                data:
+                    type: array
+                    items:
+                        type: object
+                message:
+                    type: string
+    responses:
+        404:
+            description: "data tidak ditemukan"
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                    example:
+                        message: "data tidak ditemukan"
+        400:
+            description: "Kesalahan input dari sisi user"
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                    example:
+                        message: "kesalahan input dari sisi user"
+        500:
+            description: "Kesalahan dari server"
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                        example:
+                            message: "terjadi kesalahan pada server"
