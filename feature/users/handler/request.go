@@ -1,6 +1,6 @@
 package handler
 
-import "socialmedia/features/users"
+import "e-commerce-api/features/users"
 
 type LoginRequest struct {
 	Username string `json:"username" form:"username"`

@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"e-commerce-api/features/users"
 	"net/http"
-	"socialmedia/features/users"
 	"strings"
 )
 
