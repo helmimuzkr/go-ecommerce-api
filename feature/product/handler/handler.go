@@ -61,7 +61,7 @@ func (ph *productHandler) GetAll() echo.HandlerFunc {
 			TotalPage:   p["totalPage"].(int),
 		}
 
-		productResp := ToResponse(res)
+		productResp := ToListResponse(res)
 
 		webResponse := productWithPagination{
 			Pagination: paginate,
@@ -75,9 +75,17 @@ func (ph *productHandler) GetAll() echo.HandlerFunc {
 
 func (ph *productHandler) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		str := c.Param("product_id")
+		productID, _ := strconv.Atoi(str)
 
-		
-		return nil
+		res, err := ph.srv.GetByID(uint(productID))
+		if err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		webResponse := ToResponse(res)
+
+		return c.JSON(helper.SuccessResponse(200, "sukses menampilkan produk", webResponse))
 	}
 }
 

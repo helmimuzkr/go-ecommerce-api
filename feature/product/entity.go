@@ -10,17 +10,12 @@ type Core struct {
 	ID          uint
 	Name        string `validate:"min=3"`
 	Description string `validate:"min=5"`
-	Seller      Seller
+	SellerName  string
+	City        string
+	Avatar      string
 	Price       int `validate:"gte=10000"`
 	Stock       int
 	Image       string
-}
-
-type Seller struct {
-	ID     uint
-	Name   string
-	City   string
-	Avatar string
 }
 
 type ProductHandler interface {

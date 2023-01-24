@@ -27,25 +27,14 @@ func (pd *productData) Add(userID uint, newProduct product.Core) error {
 }
 
 func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error) {
-	dp := []Product{}
-	du := []User{}
-
-	queryProduct := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
-	txProduct := pd.db.Raw(queryProduct, limit, offset).Find(&dp)
+	products := []UserProduct{}
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	txProduct := pd.db.Raw(query, limit, offset).Find(&products)
 	if txProduct.Error != nil {
 		return nil, txProduct.Error
 	}
 
-	// query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.id, users.name, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
-	queryUser := "SELECT users.id, users.name, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id ORDER BY products.id DESC LIMIT ? OFFSET ?"
-	txUser := pd.db.Raw(queryUser, limit, offset).Find(&du)
-	if txUser.Error != nil {
-		return nil, txUser.Error
-	}
-
-	cores := ToSliceCore(dp, du)
-
-	return cores, nil
+	return ToSliceCore(products), nil
 }
 
 func (pd *productData) CountProduct() (int, error) {
@@ -59,7 +48,14 @@ func (pd *productData) CountProduct() (int, error) {
 }
 
 func (pd *productData) GetByID(productID uint) (product.Core, error) {
-	return product.Core{}, nil
+	up := UserProduct{}
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.id = ?"
+	tx := pd.db.Raw(query, productID).First(&up)
+	if tx.Error != nil {
+		return product.Core{}, tx.Error
+	}
+
+	return ToCore(up), nil
 }
 
 func (pd *productData) Update(userID uint, productID uint, updateProduct product.Core) error {
