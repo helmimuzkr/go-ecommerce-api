@@ -12,7 +12,7 @@ type productHandler struct {
 	srv product.ProductService
 }
 
-func NewProductHandler(s product.ProductService) product.ProductHandler {
+func New(s product.ProductService) product.ProductHandler {
 	return &productHandler{srv: s}
 }
 
@@ -26,11 +26,15 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 		}
 
 		fileHeader, _ := c.FormFile("image")
+		if fileHeader == nil {
+			return c.JSON(helper.ErrorResponse("kesalahan input pada user karena tidak mengunggah gambar produk"))
+		}
+		file, _ := fileHeader.Open()
 
 		pc := product.Core{}
 		copier.Copy(&pc, &pr)
 
-		if err := ph.srv.Add(token, pc, fileHeader); err != nil {
+		if err := ph.srv.Add(token, pc, file); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
