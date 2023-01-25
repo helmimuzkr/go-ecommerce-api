@@ -1,23 +1,4 @@
 mode: set
-<<<<<<< HEAD
-e-commerce-api/feature/product/service/service.go:19.79,24.2 1 1
-e-commerce-api/feature/product/service/service.go:26.102,28.17 2 1
-e-commerce-api/feature/product/service/service.go:32.2,32.51 1 1
-e-commerce-api/feature/product/service/service.go:37.2,38.16 2 1
-e-commerce-api/feature/product/service/service.go:48.2,52.61 3 1
-e-commerce-api/feature/product/service/service.go:56.2,56.12 1 1
-e-commerce-api/feature/product/service/service.go:28.17,30.3 1 1
-e-commerce-api/feature/product/service/service.go:32.51,35.3 2 1
-e-commerce-api/feature/product/service/service.go:38.16,41.55 3 1
-e-commerce-api/feature/product/service/service.go:46.3,46.25 1 1
-e-commerce-api/feature/product/service/service.go:41.55,43.4 1 1
-e-commerce-api/feature/product/service/service.go:43.9,45.4 1 1
-e-commerce-api/feature/product/service/service.go:52.61,54.3 1 1
-e-commerce-api/feature/product/service/service.go:59.69,61.2 1 0
-e-commerce-api/feature/product/service/service.go:63.73,65.2 1 0
-e-commerce-api/feature/product/service/service.go:67.137,69.2 1 0
-e-commerce-api/feature/product/service/service.go:71.75,73.2 1 0
-=======
 e-commerce-api/feature/users/services/service.go:21.47,26.2 1 1
 e-commerce-api/feature/users/services/service.go:28.86,30.16 2 1
 e-commerce-api/feature/users/services/service.go:40.2,40.69 1 1
@@ -61,4 +42,21 @@ e-commerce-api/feature/users/services/service.go:164.16,166.49 2 1
 e-commerce-api/feature/users/services/service.go:171.3,171.25 1 1
 e-commerce-api/feature/users/services/service.go:166.49,168.4 1 1
 e-commerce-api/feature/users/services/service.go:168.9,170.4 1 1
->>>>>>> feat: added coverage, 95% for users service
+mode: set
+e-commerce-api/feature/product/service/service.go:19.79,24.2 1 1
+e-commerce-api/feature/product/service/service.go:26.102,28.17 2 1
+e-commerce-api/feature/product/service/service.go:32.2,32.51 1 1
+e-commerce-api/feature/product/service/service.go:37.2,38.16 2 1
+e-commerce-api/feature/product/service/service.go:48.2,52.61 3 1
+e-commerce-api/feature/product/service/service.go:56.2,56.12 1 1
+e-commerce-api/feature/product/service/service.go:28.17,30.3 1 1
+e-commerce-api/feature/product/service/service.go:32.51,35.3 2 1
+e-commerce-api/feature/product/service/service.go:38.16,41.55 3 1
+e-commerce-api/feature/product/service/service.go:46.3,46.25 1 1
+e-commerce-api/feature/product/service/service.go:41.55,43.4 1 1
+e-commerce-api/feature/product/service/service.go:43.9,45.4 1 1
+e-commerce-api/feature/product/service/service.go:52.61,54.3 1 1
+e-commerce-api/feature/product/service/service.go:59.69,61.2 1 0
+e-commerce-api/feature/product/service/service.go:63.73,65.2 1 0
+e-commerce-api/feature/product/service/service.go:67.137,69.2 1 0
+e-commerce-api/feature/product/service/service.go:71.75,73.2 1 0
