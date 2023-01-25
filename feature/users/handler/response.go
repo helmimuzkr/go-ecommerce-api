@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"e-commerce-api/features/users"
+	"e-commerce-api/feature/users"
 	"net/http"
 	"strings"
 )
@@ -21,14 +21,14 @@ func ToResponse(data users.Core) UserReponse {
 type UpdateUserResp struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	Userpp   string `json:"userpp"`
+	Avatar   string `json:"avatar"`
 }
 
-func PPToResponse(data users.Core) UpdateUserResp {
+func AvatarResponse(data users.Core) UpdateUserResp {
 	return UpdateUserResp{
 		Username: data.Username,
 		Email:    data.Email,
-		Userpp:   data.Userpp,
+		Avatar:   data.Avatar,
 	}
 }
 

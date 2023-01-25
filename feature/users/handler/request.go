@@ -1,6 +1,6 @@
 package handler
 
-import "e-commerce-api/features/users"
+import "e-commerce-api/feature/users"
 
 type LoginRequest struct {
 	Username string `json:"username" form:"username"`
@@ -15,8 +15,11 @@ type RegisterRequest struct {
 
 type UpdateRequest struct {
 	Username string `json:"username" form:"username"`
+	Name     string `json:"name" form:"name"`
 	Email    string `json:"email" form:"email"`
-	Userpp   string `json:"userpp" form:"userpp"`
+	Password string `json:"password" form:"password"`
+	Address  string `json:"address" form:"address"`
+	Avatar   string `json:"avatar" form:"avatar"`
 }
 
 func ReqToCore(data interface{}) *users.Core {
@@ -34,9 +37,12 @@ func ReqToCore(data interface{}) *users.Core {
 		res.Password = cnv.Password
 	case UpdateRequest:
 		cnv := data.(UpdateRequest)
-		res.Email = cnv.Email
 		res.Username = cnv.Username
-		res.Userpp = cnv.Userpp
+		res.Name = cnv.Name
+		res.Email = cnv.Email
+		res.Password = cnv.Password
+		res.Address = cnv.Address
+		res.Avatar = cnv.Avatar
 	default:
 		return nil
 	}

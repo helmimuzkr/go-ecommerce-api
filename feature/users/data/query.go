@@ -1,11 +1,10 @@
 package data
 
 import (
-	"e-commerce-api/features/users"
+	"e-commerce-api/feature/users"
 	"errors"
 	"log"
 
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -84,25 +83,5 @@ func (uq *userQuery) Delete(id uint) error {
 		return errors.New("tidak bisa menghapus data")
 	}
 
-	return nil
-}
-
-func (uq *userQuery) UpdatePwd(id, newPwd string) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPwd), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("delete query error")
-		return errors.New("tidak bisa menghapus data")
-	}
-
-	qry := uq.db.Model(&User{}).Where("id = ?", id).Update("password", hashedPassword)
-	if qry.Error != nil {
-		return qry.Error
-	}
-
-	affrows := qry.RowsAffected
-	if affrows == 0 {
-		log.Println("no rows affected")
-		return errors.New("tidak ada data user yang terhapus")
-	}
 	return nil
 }

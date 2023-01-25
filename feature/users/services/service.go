@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type userUseCase struct {
@@ -106,7 +105,7 @@ func (uuc *userUseCase) Update(token interface{}, formHeader *multipart.FileHead
 	oldAvatarPublicID := helper.GetPublicID(user.Avatar)
 
 	if formHeader != nil {
-		// cek fie yang di upload
+		// cek file yang di upload
 		formFile, err := formHeader.Open()
 		if err != nil {
 			return users.Core{}, errors.New("input tidak sesuai")
@@ -165,26 +164,4 @@ func (uuc *userUseCase) Delete(token interface{}) error {
 	}
 
 	return nil
-}
-
-func (uuc *userUseCase) UpdatePwd(token interface{}, newPassword string) (users.Core, error) {
-	id := helper.ExtractToken(token)
-	if id <= 0 {
-		return users.Core{}, errors.New("data not found")
-	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
-	if err != nil {
-		return users.Core{}, err
-	}
-	err = uuc.qry.UpdatePwd(uint(id), string(hashedPassword))
-	if err != nil {
-		msg := ""
-		if strings.Contains(err.Error(), "not found") {
-			msg = "data not found"
-		} else {
-			msg = "server error"
-		}
-		return users.Core{}, errors.New(msg)
-	}
-	return users.Core{}, nil
 }
