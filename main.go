@@ -24,9 +24,10 @@ func main() {
 	config.Migrate(db)
 
 	v := validator.New()
+	cld := config.NewCloudinary(*c)
 
 	productData := _productData.New(db)
-	productService := _productService.New(productData, v)
+	productService := _productService.New(productData, v, cld)
 	productHandler := _productHandler.New(productService)
 
 	userData := data.New(db)
@@ -44,11 +45,12 @@ func main() {
 	e.GET("/users", userHdl.Profile(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.PUT("/users", userHdl.Update(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.DELETE("/users", userHdl.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
+
 	e.POST("/products", productHandler.Add(), middleware.JWT(config.JWT_KEY))
 	e.GET("/products", productHandler.GetAll())
 	e.GET("/products/:product_id", productHandler.GetByID())
-	e.PUT("/products/:product_id", productHandler.Update(), echojwt.JWT(config.JWT_KEY))
-	e.DELETE("/products/:product_id", productHandler.Delete(), echojwt.JWT(config.JWT_KEY))
+	e.PUT("/products/:product_id", productHandler.Update(), middleware.JWT(config.JWT_KEY))
+	e.DELETE("/products/:product_id", productHandler.Delete(), middleware.JWT(config.JWT_KEY))
 
 	e.POST("/products", productHandler.Add(), middleware.JWT(config.JWT_KEY))
 	if err := e.Start(":8000"); err != nil {
