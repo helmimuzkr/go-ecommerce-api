@@ -3,6 +3,7 @@ package helper
 import (
 	"context"
 	"errors"
+	"mime/multipart"
 	"strings"
 	"time"
 
@@ -12,21 +13,15 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
-func UploadFile(file interface{}) (string, error) {
-	cld, err := cloudinary.NewFromParams(config.CLOUDINARY_CLOUD_NAME, config.CLOUDINARY_API_KEY, config.CLOUDINARY_API_SECRET)
-	if err != nil {
-		return "", err
-	}
-	// cld, err := cloudinary.NewFromParams("dnji8pgyl", "455139436831234", "iMQL2OVjJQKttb05He-r7pBN_8k")
-	// if err != nil {
-	// 	return "", err
-	// }
+func UploadFile(file *multipart.FileHeader, cld *cloudinary.Cloudinary) (string, error) {
+	src, _ := file.Open()
+	defer src.Close()
 
 	publicID := time.Now().Format("20060102-150405") // Format  "(YY-MM-DD)-(hh-mm-ss)""
 
 	uploadResult, err := cld.Upload.Upload(
 		context.Background(),
-		file,
+		src,
 		uploader.UploadParams{
 			PublicID:     publicID,
 			ResourceType: "image",
@@ -62,14 +57,9 @@ func GetPublicID(secureURL string) string {
 	return publicID
 }
 
-func DestroyFile(publicID string) error {
-	cld, err := cloudinary.NewFromParams(config.CLOUDINARY_CLOUD_NAME, config.CLOUDINARY_API_KEY, config.CLOUDINARY_API_SECRET)
-	if err != nil {
-		return err
-	}
-
+func DestroyFile(publicID string, cld *cloudinary.Cloudinary) error {
 	// Proses destroy file
-	_, err = cld.Upload.Destroy(
+	_, err := cld.Upload.Destroy(
 		context.Background(),
 		uploader.DestroyParams{
 			PublicID: publicID,

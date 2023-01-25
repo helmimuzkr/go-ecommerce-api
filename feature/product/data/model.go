@@ -24,11 +24,16 @@ type ProductNonGorm struct {
 	Stock int
 }
 
-type User struct {
-	gorm.Model
-	Name     string
-	City     string
-	Products []Product `gorm:"foreignKey:SellerID"`
+type UserProduct struct {
+	ID          uint
+	Name        string
+	Description string
+	Price       int
+	Stock       int
+	Image       string
+	Username    string
+	City        string
+	Avatar      string
 }
 
 func ToData(core product.Core) Product {
@@ -42,23 +47,24 @@ func ToData(core product.Core) Product {
 	}
 }
 
-func ToCore(p Product, u User) product.Core {
+func ToCore(up UserProduct) product.Core {
 	return product.Core{
-		ID:          p.ID,
-		Name:        p.Name,
-		SellerName:  u.Name,
-		Description: p.Description,
-		City:        u.City,
-		Price:       p.Price,
-		Stock:       p.Stock,
-		Image:       p.Image,
+		ID:          up.ID,
+		Name:        up.Name,
+		Description: up.Description,
+		SellerName:  up.Username,
+		City:        up.City,
+		Avatar:      up.Avatar,
+		Price:       up.Price,
+		Stock:       up.Stock,
+		Image:       up.Image,
 	}
 }
 
-func ToSliceCore(p []Product, u []User) []product.Core {
+func ToSliceCore(up []UserProduct) []product.Core {
 	temp := []product.Core{}
-	for i := range p {
-		c := ToCore(p[i], u[i])
+	for _, v := range up {
+		c := ToCore(v)
 		temp = append(temp, c)
 	}
 
