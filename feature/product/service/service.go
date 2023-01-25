@@ -8,22 +8,25 @@ import (
 	"mime/multipart"
 	"strings"
 
+	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/go-playground/validator/v10"
 )
 
 type productService struct {
 	qry product.ProductData
 	vld *validator.Validate
+	cld *cloudinary.Cloudinary
 }
 
-func New(d product.ProductData, v *validator.Validate) product.ProductService {
+func New(d product.ProductData, v *validator.Validate, cld *cloudinary.Cloudinary) product.ProductService {
 	return &productService{
 		qry: d,
 		vld: v,
+		cld: cld,
 	}
 }
 
-func (ps *productService) Add(token interface{}, newProduct product.Core, file multipart.File) error {
+func (ps *productService) Add(token interface{}, newProduct product.Core, fileHeader *multipart.FileHeader) error {
 	userID := helper.ExtractToken(token)
 	if userID <= 0 {
 		return errors.New("token tidak valid")
@@ -34,7 +37,7 @@ func (ps *productService) Add(token interface{}, newProduct product.Core, file m
 		return errors.New(msg)
 	}
 
-	secureURL, err := helper.UploadFile(file)
+	secureURL, err := helper.UploadFile(fileHeader, ps.cld)
 	if err != nil {
 		log.Println(err)
 		var msg string
@@ -58,7 +61,15 @@ func (ps *productService) Add(token interface{}, newProduct product.Core, file m
 
 func (ps *productService) GetAll(page int) (map[string]interface{}, []product.Core, error) {
 	// Total record
-	totalRecord, _ := ps.qry.CountProduct()
+	totalRecord, err := ps.qry.CountProduct()
+	if err != nil {
+		log.Println(err)
+		return nil, nil, errors.New("terjadi kesalahan pada sistem server")
+	}
+	if totalRecord < 1 {
+		log.Println("total record kurang dari 1")
+		return nil, nil, errors.New("data tidak ditemukan")
+	}
 	// Limit
 	limit := 10
 	// Total pages
@@ -94,7 +105,7 @@ func (ps *productService) GetByID(productID uint) (product.Core, error) {
 		log.Println(err)
 		msg := ""
 		if strings.Contains(err.Error(), "not found") {
-			msg = "data product tidak ditemukan"
+			msg = "data tidak ditemukan"
 		} else {
 			msg = "terjadi kesalahan pada sistem server"
 		}
@@ -104,7 +115,7 @@ func (ps *productService) GetByID(productID uint) (product.Core, error) {
 	return res, nil
 }
 
-func (ps *productService) Update(token interface{}, productID uint, updateProduct product.Core, file multipart.File) error {
+func (ps *productService) Update(token interface{}, productID uint, updateProduct product.Core, fileHeader *multipart.FileHeader) error {
 	userID := helper.ExtractToken(token)
 	if userID <= 0 {
 		return errors.New("token tidak valid")
@@ -116,7 +127,7 @@ func (ps *productService) Update(token interface{}, productID uint, updateProduc
 		return errors.New(msg)
 	}
 
-	if file == nil {
+	if fileHeader == nil {
 		if err := ps.qry.Update(uint(userID), productID, updateProduct); err != nil {
 			log.Println(err)
 			msg := ""
@@ -132,9 +143,18 @@ func (ps *productService) Update(token interface{}, productID uint, updateProduc
 
 	// Proses update dan delete file
 	// Ambil url avatar sebelumnya untuk dilakukan penghapusan file
-	res, _ := ps.qry.GetByID(productID)
-
-	secureURL, err := helper.UploadFile(file)
+	res, err := ps.qry.GetByID(productID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
+	secureURL, err := helper.UploadFile(fileHeader, ps.cld)
 	if err != nil {
 		log.Println(err)
 		var msg string
@@ -160,7 +180,7 @@ func (ps *productService) Update(token interface{}, productID uint, updateProduc
 
 	if res.Image != "" {
 		publicID := helper.GetPublicID(res.Avatar)
-		if err := helper.DestroyFile(publicID); err != nil {
+		if err := helper.DestroyFile(publicID, ps.cld); err != nil {
 			log.Println("destroy file", err)
 			return errors.New("failed to destroy image")
 		}
@@ -177,7 +197,17 @@ func (ps *productService) Delete(token interface{}, productID uint) error {
 
 	// Proses update dan delete file
 	// Ambil url avatar sebelumnya untuk dilakukan penghapusan file
-	res, _ := ps.qry.GetByID(productID)
+	res, err := ps.qry.GetByID(productID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
 
 	// Delete data pada database
 	if err := ps.qry.Delete(uint(userID), productID); err != nil {
@@ -194,7 +224,7 @@ func (ps *productService) Delete(token interface{}, productID uint) error {
 	if res.Avatar != "" {
 		// Delete file image
 		publicID := helper.GetPublicID(res.Avatar)
-		if err := helper.DestroyFile(publicID); err != nil {
+		if err := helper.DestroyFile(publicID, ps.cld); err != nil {
 			log.Println("destroy file", err)
 			return errors.New("failed to destroy image")
 		}

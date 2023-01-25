@@ -3,7 +3,6 @@ package handler
 import (
 	"e-commerce-api/feature/product"
 	"e-commerce-api/helper"
-	"mime/multipart"
 	"strconv"
 
 	"github.com/jinzhu/copier"
@@ -27,16 +26,15 @@ func (ph *productHandler) Add() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		fileHeader, _ := c.FormFile("image")
-		if fileHeader == nil {
-			return c.JSON(helper.ErrorResponse("kesalahan input pada user karena tidak mengunggah gambar produk"))
+		fileHeader, err := c.FormFile("image")
+		if err != nil {
+			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
 		}
-		file, _ := fileHeader.Open()
 
 		pc := product.Core{}
 		copier.Copy(&pc, &pr)
 
-		if err := ph.srv.Add(token, pc, file); err != nil {
+		if err := ph.srv.Add(token, pc, fileHeader); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
@@ -102,16 +100,15 @@ func (ph *productHandler) Update() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		fileHeader, _ := c.FormFile("image")
-		var file multipart.File
-		if fileHeader != nil {
-			file, _ = fileHeader.Open()
+		fileHeader, err := c.FormFile("image")
+		if err != nil {
+			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
 		}
 
 		pc := product.Core{}
 		copier.Copy(&pc, &pr)
 
-		if err := ph.srv.Update(token, uint(productID), pc, file); err != nil {
+		if err := ph.srv.Update(token, uint(productID), pc, fileHeader); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
