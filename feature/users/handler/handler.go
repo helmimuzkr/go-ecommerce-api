@@ -56,18 +56,24 @@ func (uc *userControl) Profile() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", AvatarResponse(res)))
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", UpdateUser(res)))
 	}
 }
 
 func (uc *userControl) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		//
-		formHeader, err := c.FormFile("file")
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, "File is required")
-		}
+		// var formHeader *multipart.FileHeader
+		// var err error
+
+		// if c.Request().MultipartForm != nil && c.Request().MultipartForm.File["file"] != nil {
+		// 	formHeader, err = c.FormFile("file")
+		// 	if err != nil {
+		// 		return c.JSON(http.StatusBadRequest, "File is required")
+		// 	}
+		// } else {
+		// 	formHeader = nil
+		// }
 
 		token := c.Get("user")
 		input := UpdateRequest{}
@@ -78,15 +84,15 @@ func (uc *userControl) Update() echo.HandlerFunc {
 		}
 
 		//validasi input data json
-		if err := c.Validate(input); err != nil {
-			return c.JSON(http.StatusBadRequest, "Invalid input data")
-		}
+		// if err := c.Validate(input); err != nil {
+		// 	return c.JSON(http.StatusBadRequest, "Invalid input data")
+		// }
 
-		res, err := uc.srv.Update(token, formHeader, *ReqToCore(input))
+		res, err := uc.srv.Update(token, *ReqToCore(input))
 		if err != nil {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil update profil", AvatarResponse(res)))
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil update profil", UpdateUser(res)))
 	}
 }
 
@@ -99,6 +105,6 @@ func (uc *userControl) Delete() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil delete profil", err))
+		return c.JSON(PrintSuccessNoData(http.StatusOK, "berhasil delete profil", err))
 	}
 }

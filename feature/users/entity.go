@@ -1,8 +1,6 @@
 package users
 
 import (
-	"mime/multipart"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -10,9 +8,10 @@ type Core struct {
 	ID       uint
 	Username string
 	Name     string
-	Email    string
 	Password string
-	Address  string
+	Email    string
+	City     string
+	Phone    string
 	Avatar   string
 }
 
@@ -28,7 +27,7 @@ type UserService interface {
 	Login(username, password string) (string, Core, error)
 	Register(newUser Core) (Core, error)
 	Profile(token interface{}) (Core, error)
-	Update(token interface{}, formHeader *multipart.FileHeader, updateData Core) (Core, error)
+	Update(token interface{}, updateData Core) (Core, error)
 	Delete(token interface{}) error
 }
 
