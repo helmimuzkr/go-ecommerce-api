@@ -27,10 +27,10 @@ type ProductHandler interface {
 }
 
 type ProductService interface {
-	Add(token interface{}, newProduct Core, file multipart.File) error
+	Add(token interface{}, newProduct Core, fileHeader *multipart.FileHeader) error
 	GetAll(page int) (map[string]interface{}, []Core, error)
 	GetByID(productID uint) (Core, error)
-	Update(token interface{}, productID uint, updateProduct Core, file multipart.File) error
+	Update(token interface{}, productID uint, updateProduct Core, fileHeader *multipart.FileHeader) error
 	Delete(token interface{}, productID uint) error
 }
 
