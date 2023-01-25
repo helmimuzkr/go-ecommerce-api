@@ -24,5 +24,5 @@ func InitDB(ac AppConfig) *gorm.DB {
 
 func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&data.User{})
-	db.AutoMigrate(productModel.Product{})
+	db.AutoMigrate(&productModel.Product{})
 }

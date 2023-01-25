@@ -11,7 +11,6 @@ import (
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -46,7 +45,7 @@ func main() {
 	e.PUT("/users", userHdl.Update(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.DELETE("/users", userHdl.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 
-	e.POST("/products", productHandler.Add(), echojwt.JWT(config.JWT_KEY))
+	e.POST("/products", productHandler.Add(), middleware.JWT(config.JWT_KEY))
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())
 	}
