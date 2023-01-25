@@ -3,7 +3,7 @@ package helper
 import (
 	"e-commerce-api/config"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt"
 )
 
 func ExtractToken(t interface{}) int {

@@ -63,19 +63,19 @@ func ReadEnv() *AppConfig {
 		isRead = false
 	}
 	if val, found := os.LookupEnv("CLOUDINARY_CLOUD_NAME"); found {
-		app.DBName = val
+		app.CLOUDINARY_CLOUD_NAME = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("CLOUDINARY_API_KEY"); found {
-		app.DBName = val
+		app.CLOUDINARY_API_KEY = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("CLOUDINARY_API_SECRET"); found {
-		app.DBName = val
+		app.CLOUDINARY_API_SECRET = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("CLOUDINARY_UPLOAD_FOLDER"); found {
-		app.DBName = val
+		app.CLOUDINARY_UPLOAD_FOLDER = val
 		isRead = false
 	}
 
