@@ -8,7 +8,6 @@ type productResponse struct {
 	Description string `json:"description"`
 	SellerName  string `json:"seller_name"`
 	City        string `json:"city"`
-	Avatar      string `json:"avatar"`
 	Price       int    `json:"price"`
 	Stock       int    `json:"stock"`
 	Image       string `json:"image"`
@@ -35,7 +34,6 @@ func ToResponse(core product.Core) productResponse {
 		Description: core.Description,
 		SellerName:  core.SellerName,
 		City:        core.City,
-		Avatar:      core.Avatar,
 		Price:       core.Price,
 		Stock:       core.Stock,
 		Image:       core.Image,
@@ -51,7 +49,6 @@ func ToListResponse(cores []product.Core) []productResponse {
 			Description: v.Description,
 			SellerName:  v.SellerName,
 			City:        v.City,
-			Avatar:      v.Avatar,
 			Price:       v.Price,
 			Stock:       v.Stock,
 			Image:       v.Image,
