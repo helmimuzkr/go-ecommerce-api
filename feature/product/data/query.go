@@ -29,7 +29,7 @@ func (pd *productData) Add(userID uint, newProduct product.Core) error {
 
 func (pd *productData) GetAll(limit int, offset int) ([]product.Core, error) {
 	up := []UserProduct{}
-	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL ORDER BY products.id DESC LIMIT ? OFFSET ?"
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.username, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL ORDER BY products.id DESC LIMIT ? OFFSET ?"
 	txProduct := pd.db.Raw(query, limit, offset).Find(&up)
 	if txProduct.Error != nil {
 		return nil, txProduct.Error
@@ -50,7 +50,7 @@ func (pd *productData) CountProduct() (int, error) {
 
 func (pd *productData) GetByID(productID uint) (product.Core, error) {
 	up := UserProduct{}
-	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.fullname, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL AND products.id = ?"
+	query := "SELECT products.id, products.name, products.description, products.price, products.stock, products.image, users.username, users.city, users.avatar FROM products JOIN users ON users.id = products.seller_id WHERE products.deleted_at IS NULL AND products.id = ?"
 	tx := pd.db.Raw(query, productID).First(&up)
 	if tx.Error != nil {
 		return product.Core{}, tx.Error
