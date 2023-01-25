@@ -2,6 +2,7 @@ package handler
 
 import (
 	"e-commerce-api/feature/users"
+	"e-commerce-api/helper"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -88,11 +89,11 @@ func (uc *userControl) Update() echo.HandlerFunc {
 		// 	return c.JSON(http.StatusBadRequest, "Invalid input data")
 		// }
 
-		res, err := uc.srv.Update(token, *ReqToCore(input))
+		_, err := uc.srv.Update(token, *ReqToCore(input))
 		if err != nil {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil update profil", UpdateUser(res)))
+		return c.JSON(helper.SuccessResponse(http.StatusOK, "berhasil update profil"))
 	}
 }
 
