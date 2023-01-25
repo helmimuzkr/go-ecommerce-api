@@ -24,7 +24,7 @@ func main() {
 	config.Migrate(db)
 
 	v := validator.New()
-	cld := config.NewCloudinary(*c)
+	cld := config.NewCloudinary(*cfg)
 
 	productData := _productData.New(db)
 	productService := _productService.New(productData, v, cld)
@@ -46,13 +46,13 @@ func main() {
 	e.PUT("/users", userHdl.Update(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.DELETE("/users", userHdl.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 
-	e.POST("/products", productHandler.Add(), middleware.JWT(config.JWT_KEY))
+	e.POST("/products", productHandler.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/products", productHandler.GetAll())
 	e.GET("/products/:product_id", productHandler.GetByID())
-	e.PUT("/products/:product_id", productHandler.Update(), middleware.JWT(config.JWT_KEY))
-	e.DELETE("/products/:product_id", productHandler.Delete(), middleware.JWT(config.JWT_KEY))
+	e.PUT("/products/:product_id", productHandler.Update(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.DELETE("/products/:product_id", productHandler.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 
-	e.POST("/products", productHandler.Add(), middleware.JWT(config.JWT_KEY))
+	e.POST("/products", productHandler.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())
 	}
