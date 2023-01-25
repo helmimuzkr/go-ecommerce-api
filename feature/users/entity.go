@@ -6,10 +6,10 @@ import (
 
 type Core struct {
 	ID       uint
-	Username string
-	Name     string
-	Password string
-	Email    string
+	Username string `validate:"min=5,omitempty"`
+	Fullname string
+	Password string `validate:"min=5,omitempty"`
+	Email    string `validate:"min=5,omitempty,email"`
 	City     string
 	Phone    string
 	Avatar   string
