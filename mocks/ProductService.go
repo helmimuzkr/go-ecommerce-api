@@ -15,13 +15,13 @@ type ProductService struct {
 	mock.Mock
 }
 
-// Add provides a mock function with given fields: token, newProduct, file
-func (_m *ProductService) Add(token interface{}, newProduct product.Core, file multipart.File) error {
-	ret := _m.Called(token, newProduct, file)
+// Add provides a mock function with given fields: token, newProduct, fileHeader
+func (_m *ProductService) Add(token interface{}, newProduct product.Core, fileHeader *multipart.FileHeader) error {
+	ret := _m.Called(token, newProduct, fileHeader)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(interface{}, product.Core, multipart.File) error); ok {
-		r0 = rf(token, newProduct, file)
+	if rf, ok := ret.Get(0).(func(interface{}, product.Core, *multipart.FileHeader) error); ok {
+		r0 = rf(token, newProduct, fileHeader)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -96,13 +96,13 @@ func (_m *ProductService) GetByID(productID uint) (product.Core, error) {
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: token, productID, updateProduct, file
-func (_m *ProductService) Update(token interface{}, productID uint, updateProduct product.Core, file multipart.File) error {
-	ret := _m.Called(token, productID, updateProduct, file)
+// Update provides a mock function with given fields: token, productID, updateProduct, fileHeader
+func (_m *ProductService) Update(token interface{}, productID uint, updateProduct product.Core, fileHeader *multipart.FileHeader) error {
+	ret := _m.Called(token, productID, updateProduct, fileHeader)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(interface{}, uint, product.Core, multipart.File) error); ok {
-		r0 = rf(token, productID, updateProduct, file)
+	if rf, ok := ret.Get(0).(func(interface{}, uint, product.Core, *multipart.FileHeader) error); ok {
+		r0 = rf(token, productID, updateProduct, fileHeader)
 	} else {
 		r0 = ret.Error(0)
 	}
