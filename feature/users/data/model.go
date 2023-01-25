@@ -1,7 +1,7 @@
 package data
 
 import (
-	"e-commerce-api/features/users"
+	"e-commerce-api/feature/users"
 
 	"gorm.io/gorm"
 )

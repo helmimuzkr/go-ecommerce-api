@@ -56,7 +56,7 @@ func (uc *userControl) Profile() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", PPToResponse(res)))
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", AvatarResponse(res)))
 	}
 }
 
@@ -78,7 +78,7 @@ func (uc *userControl) Update() echo.HandlerFunc {
 		}
 
 		//validasi input data json
-		if err := validation.Validate(input); err != nil {
+		if err := c.Validate(input); err != nil {
 			return c.JSON(http.StatusBadRequest, "Invalid input data")
 		}
 
@@ -86,7 +86,7 @@ func (uc *userControl) Update() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil update profil", PPToResponse(res)))
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil update profil", AvatarResponse(res)))
 	}
 }
 
@@ -100,24 +100,5 @@ func (uc *userControl) Delete() echo.HandlerFunc {
 		}
 
 		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil delete profil", err))
-	}
-}
-
-func (uc *userControl) UpdatePwd() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		token := c.Get("user")
-		newPassword := c.FormValue("new_password")
-
-		//validasi password
-		if newPassword == "" {
-			return c.JSON(PrintErrorResponse("password tidak boleh kosong"))
-		}
-
-		res, err := uc.srv.UpdatePwd(token, newPassword)
-		if err != nil {
-			return c.JSON(PrintErrorResponse(err.Error()))
-		}
-
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", PPToResponse(res)))
 	}
 }
