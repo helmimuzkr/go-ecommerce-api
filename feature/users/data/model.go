@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 	Username string
-	Name     string
+	Fullname string
 	Password string
 	Email    string
 	City     string
@@ -23,7 +23,7 @@ func ToCore(data User) users.Core {
 	return users.Core{
 		ID:       data.ID,
 		Username: data.Username,
-		Name:     data.Name,
+		Fullname: data.Fullname,
 		Password: data.Password,
 		Email:    data.Email,
 		City:     data.City,
@@ -35,7 +35,7 @@ func CoreToData(data users.Core) User {
 	return User{
 		Model:    gorm.Model{ID: data.ID},
 		Username: data.Username,
-		Name:     data.Name,
+		Fullname: data.Fullname,
 		Password: data.Password,
 		Email:    data.Email,
 		City:     data.City,

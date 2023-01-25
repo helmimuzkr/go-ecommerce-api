@@ -5,6 +5,7 @@ import (
 	"e-commerce-api/feature/users"
 	"e-commerce-api/helper"
 	"errors"
+	"fmt"
 	"log"
 	"strings"
 
@@ -56,6 +57,14 @@ func (uuc *userUseCase) Register(newUser users.Core) (users.Core, error) {
 		log.Println("bcrypt error ", err.Error())
 		return users.Core{}, errors.New("password process error")
 	}
+
+	err = uuc.vld.Struct(&newUser)
+	if err != nil {
+		msg := helper.ValidationErrorHandle(err)
+		fmt.Println("msg", msg)
+		return users.Core{}, errors.New(msg)
+	}
+
 	newUser.Password = string(hashed)
 	res, err := uuc.qry.Register(newUser)
 	if err != nil {

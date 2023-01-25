@@ -20,7 +20,7 @@ func ToResponse(data users.Core) UserReponse {
 
 type UpdateUserResp struct {
 	Username string `json:"username"`
-	Name     string `json:"name"`
+	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	City     string `json:"city"`
 	Phone    string `json:"phone"`
@@ -30,7 +30,7 @@ type UpdateUserResp struct {
 func UpdateUser(data users.Core) UpdateUserResp {
 	return UpdateUserResp{
 		Username: data.Username,
-		Name:     data.Name,
+		Fullname: data.Fullname,
 		Email:    data.Email,
 		City:     data.City,
 		Phone:    data.Phone,
