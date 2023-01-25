@@ -138,6 +138,7 @@ func (ps *productService) Update(token interface{}, productID uint, updateProduc
 			}
 			return errors.New(msg)
 		}
+
 		return nil
 	}
 

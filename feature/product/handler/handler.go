@@ -100,10 +100,7 @@ func (ph *productHandler) Update() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		fileHeader, err := c.FormFile("image")
-		if err != nil {
-			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
-		}
+		fileHeader, _ := c.FormFile("image")
 
 		pc := product.Core{}
 		copier.Copy(&pc, &pr)
