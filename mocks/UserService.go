@@ -56,14 +56,16 @@ func (_m *UserService) Login(username string, password string) (string, users.Co
 }
 
 // Profile provides a mock function with given fields: token
-func (_m *UserService) Profile(token interface{}) (users.Core, error) {
+func (_m *UserService) Profile(token interface{}) (interface{}, error) {
 	ret := _m.Called(token)
 
-	var r0 users.Core
-	if rf, ok := ret.Get(0).(func(interface{}) users.Core); ok {
+	var r0 interface{}
+	if rf, ok := ret.Get(0).(func(interface{}) interface{}); ok {
 		r0 = rf(token)
 	} else {
-		r0 = ret.Get(0).(users.Core)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(interface{})
+		}
 	}
 
 	var r1 error

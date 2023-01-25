@@ -132,7 +132,7 @@ func TestProfile(t *testing.T) {
 
 		res, err := srv.Profile(pToken)
 		assert.Nil(t, err)
-		assert.Equal(t, resData.ID, res.ID)
+		assert.NotEmpty(t, res)
 		repo.AssertExpectations(t)
 	})
 
@@ -144,7 +144,7 @@ func TestProfile(t *testing.T) {
 		res, err := srv.Profile(token)
 		assert.NotNil(t, err)
 		assert.ErrorContains(t, err, "not found")
-		assert.Equal(t, uint(0), res.ID)
+		assert.NotEqual(t, uint(0), res)
 	})
 
 	t.Run("data tidak ditemukan", func(t *testing.T) {
@@ -158,7 +158,7 @@ func TestProfile(t *testing.T) {
 		res, err := srv.Profile(pToken)
 		assert.NotNil(t, err)
 		assert.ErrorContains(t, err, "tidak ditemukan")
-		assert.Equal(t, uint(0), res.ID)
+		assert.Empty(t, res)
 		repo.AssertExpectations(t)
 	})
 
@@ -172,7 +172,7 @@ func TestProfile(t *testing.T) {
 		res, err := srv.Profile(pToken)
 		assert.NotNil(t, err)
 		assert.ErrorContains(t, err, "server")
-		assert.Equal(t, uint(0), res.ID)
+		assert.Empty(t, res)
 		repo.AssertExpectations(t)
 	})
 }

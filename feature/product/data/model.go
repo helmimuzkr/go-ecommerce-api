@@ -16,6 +16,14 @@ type Product struct {
 	Image       string
 }
 
+type ProductNonGorm struct {
+	ID    uint
+	Image string
+	Name  string
+	Price int
+	Stock int
+}
+
 type User struct {
 	gorm.Model
 	Name     string

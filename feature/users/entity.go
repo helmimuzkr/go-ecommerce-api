@@ -1,6 +1,8 @@
 package users
 
 import (
+	"e-commerce-api/feature/product/data"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,6 +15,7 @@ type Core struct {
 	City     string
 	Phone    string
 	Avatar   string
+	Product  []data.ProductNonGorm
 }
 
 type UserHandler interface {
@@ -26,7 +29,7 @@ type UserHandler interface {
 type UserService interface {
 	Login(username, password string) (string, Core, error)
 	Register(newUser Core) (Core, error)
-	Profile(token interface{}) (Core, error)
+	Profile(token interface{}) (interface{}, error)
 	Update(token interface{}, updateData Core) (Core, error)
 	Delete(token interface{}) error
 }
@@ -34,7 +37,7 @@ type UserService interface {
 type UserData interface {
 	Login(username string) (Core, error)
 	Register(newUser Core) (Core, error)
-	Profile(id uint) (Core, error)
+	Profile(id uint) (interface{}, error)
 	Update(id uint, updateData Core) (Core, error)
 	Delete(id uint) error
 }
