@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"e-commerce-api/feature/product/data"
 	"e-commerce-api/feature/users"
 	"net/http"
 	"strings"
@@ -25,6 +26,26 @@ type UpdateUserResp struct {
 	City     string `json:"city"`
 	Phone    string `json:"phone"`
 	Avatar   string `json:"avatar"`
+}
+
+type MyProfileResp struct {
+	Username string                `json:"username"`
+	Fullname string                `json:"fullname"`
+	Email    string                `json:"email"`
+	City     string                `json:"city"`
+	Phone    string                `json:"phone"`
+	Product  []data.ProductNonGorm `json:"product"`
+}
+
+func MyProfile(data users.Core) MyProfileResp {
+	return MyProfileResp{
+		Username: data.Username,
+		Fullname: data.Fullname,
+		Email:    data.Email,
+		City:     data.City,
+		Phone:    data.Phone,
+		Product:  data.Product,
+	}
 }
 
 func UpdateUser(data users.Core) UpdateUserResp {

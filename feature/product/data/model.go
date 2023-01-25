@@ -17,11 +17,11 @@ type Product struct {
 }
 
 type ProductNonGorm struct {
-	ID    uint
-	Image string
-	Name  string
-	Price int
-	Stock int
+	ID    uint   `json:"product_id"`
+	Image string `json:"image"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+	Stock int    `json:"stock"`
 }
 
 type UserProduct struct {
