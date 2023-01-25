@@ -27,7 +27,7 @@ func (uc *userControl) Login() echo.HandlerFunc {
 
 		token, res, err := uc.srv.Login(input.Username, input.Password)
 		if err != nil {
-			return c.JSON(PrintErrorResponse(err.Error()))
+			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
 		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil login", ToResponse(res), token))
