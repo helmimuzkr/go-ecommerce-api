@@ -14,12 +14,13 @@ type RegisterRequest struct {
 }
 
 type UpdateRequest struct {
-	Username string `json:"username" form:"username"`
-	Name     string `json:"name" form:"name"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-	Address  string `json:"address" form:"address"`
-	Avatar   string `json:"avatar" form:"avatar"`
+	Username string `json:"username" form:"username" validate:"omitempty"`
+	Name     string `json:"name" form:"name" validate:"omitempty"`
+	Password string `json:"password" form:"password" validate:"omitempty"`
+	Email    string `json:"email" form:"email" validate:"omitempty"`
+	City     string `json:"city" form:"city" validate:"omitempty"`
+	Phone    string `json:"phone" form:"phone" validate:"omitempty"`
+	Avatar   string `json:"avatar" form:"avatar" validate:"omitempty"`
 }
 
 func ReqToCore(data interface{}) *users.Core {
@@ -39,10 +40,10 @@ func ReqToCore(data interface{}) *users.Core {
 		cnv := data.(UpdateRequest)
 		res.Username = cnv.Username
 		res.Name = cnv.Name
-		res.Email = cnv.Email
 		res.Password = cnv.Password
-		res.Address = cnv.Address
-		res.Avatar = cnv.Avatar
+		res.Email = cnv.Email
+		res.City = cnv.City
+		res.Phone = cnv.Phone
 	default:
 		return nil
 	}

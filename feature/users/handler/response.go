@@ -20,15 +20,30 @@ func ToResponse(data users.Core) UserReponse {
 
 type UpdateUserResp struct {
 	Username string `json:"username"`
+	Name     string `json:"name"`
 	Email    string `json:"email"`
+	City     string `json:"city"`
+	Phone    string `json:"phone"`
 	Avatar   string `json:"avatar"`
 }
 
-func AvatarResponse(data users.Core) UpdateUserResp {
+func UpdateUser(data users.Core) UpdateUserResp {
 	return UpdateUserResp{
 		Username: data.Username,
+		Name:     data.Name,
 		Email:    data.Email,
-		Avatar:   data.Avatar,
+		City:     data.City,
+		Phone:    data.Phone,
+	}
+}
+
+type AvatarResp struct {
+	Avatar string `json:"avatar"`
+}
+
+func AvatarResponse(data users.Core) AvatarResp {
+	return AvatarResp{
+		Avatar: data.Avatar,
 	}
 }
 
@@ -46,6 +61,15 @@ func PrintSuccessReponse(code int, message string, data ...interface{}) (int, in
 	}
 
 	return code, resp
+}
+
+func PrintSuccessNoData(status int, message string, data interface{}) (int, map[string]interface{}) {
+	result := make(map[string]interface{})
+	result["message"] = message
+	if data != nil {
+		result["data"] = data
+	}
+	return status, result
 }
 
 func PrintErrorResponse(msg string) (int, interface{}) {

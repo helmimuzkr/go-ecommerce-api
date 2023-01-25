@@ -6,7 +6,6 @@ import (
 	"e-commerce-api/helper"
 	"errors"
 	"log"
-	"mime/multipart"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -90,46 +89,46 @@ func (uuc *userUseCase) Profile(token interface{}) (users.Core, error) {
 	return res, nil
 }
 
-func (uuc *userUseCase) Update(token interface{}, formHeader *multipart.FileHeader, updateData users.Core) (users.Core, error) {
+func (uuc *userUseCase) Update(token interface{}, updateData users.Core) (users.Core, error) {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
 		return users.Core{}, errors.New("data not found")
 	}
 	//ambil user data
-	user, err := uuc.qry.Profile(uint(id))
-	if err != nil {
-		return users.Core{}, err
-	}
+	// res, err := uuc.qry.Profile(uint(id))
+	// if err != nil {
+	// 	return users.Core{}, err
+	// }
 
 	//ambil avatar ID
-	oldAvatarPublicID := helper.GetPublicID(user.Avatar)
+	// oldAvatarPublicID := helper.GetPublicID(user.Avatar)
 
-	if formHeader != nil {
-		// cek file yang di upload
-		formFile, err := formHeader.Open()
-		if err != nil {
-			return users.Core{}, errors.New("input tidak sesuai")
-		}
+	// if formHeader != nil {
+	// 	// cek file yang di upload
+	// 	formFile, err := formHeader.Open()
+	// 	if err != nil {
+	// 		return users.Core{}, errors.New("input tidak sesuai")
+	// 	}
 
-		uploadUrl, err := helper.UploadFile(formFile)
-		if err != nil {
-			return users.Core{}, errors.New("input tidak sesuai")
-		}
+	// 	uploadUrl, err := helper.UploadFile(formFile)
+	// 	if err != nil {
+	// 		return users.Core{}, errors.New("input tidak sesuai")
+	// 	}
 
-		//ambil avatar ID baru
-		newAvatarPublicID := helper.GetPublicID(uploadUrl)
+	// 	//ambil avatar ID baru
+	// 	newAvatarPublicID := helper.GetPublicID(uploadUrl)
 
-		if newAvatarPublicID != oldAvatarPublicID {
-			// hapus avatar lama
-			err = helper.DestroyFile(oldAvatarPublicID)
-			if err != nil {
-				return users.Core{}, err
-			}
-		}
-		updateData.Avatar = uploadUrl
-	} else {
-		updateData.Avatar = user.Avatar
-	}
+	// 	if newAvatarPublicID != oldAvatarPublicID {
+	// 		// hapus avatar lama
+	// 		err = helper.DestroyFile(oldAvatarPublicID)
+	// 		if err != nil {
+	// 			return users.Core{}, err
+	// 		}
+	// 	}
+	// 	updateData.Avatar = uploadUrl
+	// } else {
+	// 	updateData.Avatar = user.Avatar
+	// }
 
 	//update user data
 	res, err := uuc.qry.Update(uint(id), updateData)
