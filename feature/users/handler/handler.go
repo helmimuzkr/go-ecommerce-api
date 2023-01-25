@@ -56,7 +56,7 @@ func (uc *userControl) Profile() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", UpdateUser(res)))
+		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", res))
 	}
 }
 

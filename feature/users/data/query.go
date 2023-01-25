@@ -1,6 +1,7 @@
 package data
 
 import (
+	"e-commerce-api/feature/product/data"
 	"e-commerce-api/feature/users"
 	"errors"
 	"log"
@@ -39,14 +40,47 @@ func (uq *userQuery) Register(newUser users.Core) (users.Core, error) {
 	newUser.Password = ""
 	return newUser, nil
 }
-func (uq *userQuery) Profile(id uint) (users.Core, error) {
+func (uq *userQuery) Profile(id uint) (interface{}, error) {
 	res := User{}
-	if err := uq.db.Where("id = ?", id).First(&res).Error; err != nil {
+	if err := uq.db.Preload("Product").Where("id = ?", id).Find(&res).Error; err != nil {
 		log.Println("Get By ID query error", err.Error())
-		return users.Core{}, err
+		return nil, err
 	}
 
-	return ToCore(res), nil
+	resProduct := Product{}
+	if err := uq.db.Where("id = ?", res.ID).Find(&resProduct).Error; err != nil {
+		log.Println("Get by ID query error", err.Error())
+		return nil, err
+	}
+
+	result := users.Core{
+		Username: res.Username,
+		Fullname: res.Fullname,
+		Email:    res.Email,
+		City:     res.City,
+		Phone:    res.Phone,
+	}
+
+	for _, v := range res.Product {
+		user := User{}
+		if err := uq.db.Where("id = ?", v.ID).Find(&user).Error; err != nil {
+			log.Println("Get by ID query error", err.Error())
+			return nil, err
+		}
+
+		productNonGorm := data.ProductNonGorm{
+			ID:    v.ID,
+			Image: v.Image,
+			Name:  v.Name,
+			Price: v.Price,
+			Stock: v.Stock,
+		}
+
+		result.Product = append(result.Product, productNonGorm)
+
+	}
+
+	return result, nil
 }
 
 func (uq *userQuery) Update(id uint, updateData users.Core) (users.Core, error) {

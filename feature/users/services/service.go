@@ -79,7 +79,7 @@ func (uuc *userUseCase) Register(newUser users.Core) (users.Core, error) {
 
 	return res, nil
 }
-func (uuc *userUseCase) Profile(token interface{}) (users.Core, error) {
+func (uuc *userUseCase) Profile(token interface{}) (interface{}, error) {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
 		return users.Core{}, errors.New("data not found")

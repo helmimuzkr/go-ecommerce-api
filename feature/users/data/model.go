@@ -1,6 +1,7 @@
 package data
 
 import (
+	"e-commerce-api/feature/product/data"
 	"e-commerce-api/feature/users"
 
 	"gorm.io/gorm"
@@ -15,8 +16,15 @@ type User struct {
 	City     string
 	Phone    string
 	Avatar   string
+	Product  []data.Product `gorm:"foreignKey:SellerID"`
+}
 
-	//Product     []data.Product `gorm:"foreignKey:UserID"`
+type Product struct {
+	ID           uint
+	ProductImage string
+	ProductName  string
+	Price        int
+	Stock        int
 }
 
 func ToCore(data User) users.Core {

@@ -16,11 +16,11 @@ type ProductService struct {
 }
 
 // Add provides a mock function with given fields: token, newProduct, fileHeader
-func (_m *ProductService) Add(token interface{}, newProduct product.Core, fileHeader *multipart.FileHeader) error {
+func (_m *ProductService) Add(token interface{}, newProduct product.Core, fileHeader multipart.File) error {
 	ret := _m.Called(token, newProduct, fileHeader)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(interface{}, product.Core, *multipart.FileHeader) error); ok {
+	if rf, ok := ret.Get(0).(func(interface{}, product.Core, multipart.File) error); ok {
 		r0 = rf(token, newProduct, fileHeader)
 	} else {
 		r0 = ret.Error(0)
