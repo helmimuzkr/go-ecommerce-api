@@ -15,7 +15,6 @@ type User struct {
 	Email    string
 	City     string
 	Phone    string
-	Avatar   string
 	Product  []data.Product `gorm:"foreignKey:SellerID"`
 }
 

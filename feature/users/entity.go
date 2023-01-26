@@ -14,7 +14,6 @@ type Core struct {
 	Email    string `validate:"min=5,omitempty,email"`
 	City     string
 	Phone    string
-	Avatar   string
 	Product  []data.ProductNonGorm
 }
 

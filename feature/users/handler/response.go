@@ -9,12 +9,14 @@ import (
 
 type UserReponse struct {
 	Username string `json:"username"`
+	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 }
 
 func ToResponse(data users.Core) UserReponse {
 	return UserReponse{
 		Username: data.Username,
+		Fullname: data.Fullname,
 		Email:    data.Email,
 	}
 }
@@ -25,7 +27,6 @@ type UpdateUserResp struct {
 	Email    string `json:"email"`
 	City     string `json:"city"`
 	Phone    string `json:"phone"`
-	Avatar   string `json:"avatar"`
 }
 
 type MyProfileResp struct {
@@ -55,16 +56,6 @@ func UpdateUser(data users.Core) UpdateUserResp {
 		Email:    data.Email,
 		City:     data.City,
 		Phone:    data.Phone,
-	}
-}
-
-type AvatarResp struct {
-	Avatar string `json:"avatar"`
-}
-
-func AvatarResponse(data users.Core) AvatarResp {
-	return AvatarResp{
-		Avatar: data.Avatar,
 	}
 }
 
