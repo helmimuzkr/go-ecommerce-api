@@ -35,11 +35,11 @@ func (od *orderData) CreateOrder(userID uint, newOrder order.Core, carts []order
 	}
 
 	// Delete cart after make an order
-	// tx = od.deleteCart(tx, userID)
-	// if tx.Error != nil {
-	// 	tx.Rollback()
-	// 	return 0, tx.Error
-	// }
+	tx = od.deleteCart(tx, userID)
+	if tx.Error != nil {
+		tx.Rollback()
+		return 0, tx.Error
+	}
 
 	tx.Commit()
 
@@ -59,16 +59,46 @@ func (od *orderData) deleteCart(tx *gorm.DB, userID uint) *gorm.DB {
 	return tx
 }
 
-func (od *orderData) GetItemById(orderID uint) ([]order.OrderItem, error) {
-	itemModels := []OrderItemModel{}
-	query := "SELECT products.id, products.name, users.username, users.city, products.price, products.image, order_items.quantity, order_items.subtotal FROM order_items JOIN products ON products.id = order_items.product_id JOIN users ON users.id = products.seller_id WHERE order_items.deleted_at IS NULL AND order_items.order_id = ?"
-	tx := od.db.Raw(query, orderID).Find(&itemModels)
+func (od *orderData) GetItemBuy(userID uint, orderID uint) (order.Core, error) {
+	o := OrderModel{}
+	qOrder := "SELECT orders.id, orders.invoice, orders.customer_id, users.fullname, users.address, users.city, users.phone, orders.order_status, orders.order_date, orders.paid_date, orders.total_price, orders.payment_token, orders.payment_url FROM orders JOIN users ON users.id = orders.customer_id Where orders.id = ? AND orders.customer_id = ?"
+	tx := od.db.Raw(qOrder, orderID, userID).Find(&o)
 	if tx.Error != nil {
-		tx.Rollback()
-		return nil, tx.Error
+		return order.Core{}, tx.Error
 	}
 
-	return ToListCoreItem(itemModels), nil
+	itemModels := []OrderItemModel{}
+	qItems := "SELECT products.id, products.name, users.username, users.city, products.price, products.image, order_items.quantity, order_items.subtotal FROM order_items JOIN products ON products.id = order_items.product_id JOIN users ON users.id = products.seller_id WHERE order_items.deleted_at IS NULL AND order_items.order_id = ?"
+	tx = od.db.Raw(qItems, orderID).Find(&itemModels)
+	if tx.Error != nil {
+		tx.Rollback()
+		return order.Core{}, tx.Error
+	}
+
+	o.Items = itemModels
+
+	return ToCoreOrder(o), nil
+}
+
+func (od *orderData) GetItemSell(userID uint, orderID uint) (order.Core, error) {
+	o := OrderModel{}
+	qOrder := "SELECT orders.id, orders.invoice,orders.customer_id, users.fullname, users.address, users.city, users.phone, orders.order_status, orders.order_date, orders.paid_date, orders.total_price, orders.payment_token, orders.payment_url FROM orders JOIN users ON users.id = orders.customer_id Where orders.id = ?"
+	tx := od.db.Raw(qOrder, orderID).Find(&o)
+	if tx.Error != nil {
+		return order.Core{}, tx.Error
+	}
+
+	itemModels := []OrderItemModel{}
+	qItems := "SELECT products.id, products.name, users.username, users.city, products.price, products.image, order_items.quantity, order_items.subtotal FROM order_items JOIN products ON products.id = order_items.product_id JOIN users ON users.id = products.seller_id WHERE order_items.deleted_at IS NULL AND order_items.order_id = ? AND products.seller_id = ?"
+	tx = od.db.Raw(qItems, orderID, userID).Find(&itemModels)
+	if tx.Error != nil {
+		tx.Rollback()
+		return order.Core{}, tx.Error
+	}
+
+	o.Items = itemModels
+
+	return ToCoreOrder(o), nil
 }
 
 func (od *orderData) GetListOrderBuy(userID uint) ([]order.Core, error) {
@@ -95,7 +125,7 @@ func (od *orderData) GetListOrderSell(userID uint) ([]order.Core, error) {
 
 func (od *orderData) GetByID(userID uint, orderID uint) (order.Core, error) {
 	o := OrderModel{}
-	query := "SELECT orders.id, orders.invoice, users.id, users.fullname, users.address, users.city, users.phone, orders.order_status, orders.order_date, orders.paid_date, orders.total_price, orders.payment_token, orders.payment_url FROM orders JOIN users ON users.id = orders.customer_id Where orders.id = ?"
+	query := "SELECT orders.id, orders.invoice, users.id, users.fullname, users.address, users.city, users.phone, orders.order_status, orders.order_date, orders.paid_date, orders.total_price, orders.payment_token, orders.payment_url FROM orders JOIN users ON users.id = orders.customer_id Where orders.id = ? "
 	tx := od.db.Raw(query, orderID).Find(&o)
 	if tx.Error != nil {
 		return order.Core{}, tx.Error
