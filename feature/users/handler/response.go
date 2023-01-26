@@ -25,7 +25,7 @@ type UpdateUserResp struct {
 	Email    string `json:"email"`
 	City     string `json:"city"`
 	Phone    string `json:"phone"`
-	Avatar   string `json:"avatar"`
+	Address  string `json:"address"`
 }
 
 type MyProfileResp struct {
@@ -33,6 +33,7 @@ type MyProfileResp struct {
 	Fullname string                `json:"fullname"`
 	Email    string                `json:"email"`
 	City     string                `json:"city"`
+	Address  string                `json:"address"`
 	Phone    string                `json:"phone"`
 	Product  []data.ProductNonGorm `json:"product"`
 }
@@ -43,6 +44,7 @@ func MyProfile(data users.Core) MyProfileResp {
 		Fullname: data.Fullname,
 		Email:    data.Email,
 		City:     data.City,
+		Address:  data.Address,
 		Phone:    data.Phone,
 		Product:  data.Product,
 	}
@@ -54,34 +56,9 @@ func UpdateUser(data users.Core) UpdateUserResp {
 		Fullname: data.Fullname,
 		Email:    data.Email,
 		City:     data.City,
+		Address:  data.Address,
 		Phone:    data.Phone,
 	}
-}
-
-type AvatarResp struct {
-	Avatar string `json:"avatar"`
-}
-
-func AvatarResponse(data users.Core) AvatarResp {
-	return AvatarResp{
-		Avatar: data.Avatar,
-	}
-}
-
-func PrintSuccessReponse(code int, message string, data ...interface{}) (int, interface{}) {
-	resp := map[string]interface{}{}
-	if len(data) < 2 {
-		resp["data"] = (data[0])
-	} else {
-		resp["data"] = (data[0])
-		resp["token"] = data[1].(string)
-	}
-
-	if message != "" {
-		resp["message"] = message
-	}
-
-	return code, resp
 }
 
 func PrintSuccessNoData(status int, message string, data interface{}) (int, map[string]interface{}) {
