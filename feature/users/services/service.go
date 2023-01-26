@@ -104,6 +104,15 @@ func (uuc *userUseCase) Update(token interface{}, updateData users.Core) (users.
 		return users.Core{}, errors.New("data not found")
 	}
 
+	if updateData.Password != "" {
+		hashed, err := helper.GeneratePassword(updateData.Password)
+		if err != nil {
+			log.Println("bcrypt error ", err.Error())
+			return users.Core{}, errors.New("password process error")
+		}
+		updateData.Password = hashed
+	}
+
 	//update user data
 	res, err := uuc.qry.Update(uint(id), updateData)
 	if err != nil {
