@@ -16,6 +16,10 @@ import (
 	cHandler "e-commerce-api/feature/cart/handler"
 	cService "e-commerce-api/feature/cart/service"
 
+	cData "e-commerce-api/feature/cart/data"
+	cHandler "e-commerce-api/feature/cart/handler"
+	cService "e-commerce-api/feature/cart/service"
+
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -50,6 +54,10 @@ func main() {
 	cartSrv := cService.New(cartData)
 	cartHdl := cHandler.New(cartSrv)
 
+	cartData := cData.New(db)
+	cartSrv := cService.New(cartData)
+	cartHdl := cHandler.New(cartSrv)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -71,6 +79,11 @@ func main() {
 	e.POST("/orders", orderHandler.Create(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders/:order_id", orderHandler.GetByID(), middleware.JWT([]byte(config.JWT_KEY)))
+
+	e.POST("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.DELETE("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 
 	e.POST("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
