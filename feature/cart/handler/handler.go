@@ -2,6 +2,9 @@ package handler
 
 import (
 	"e-commerce-api/feature/cart"
+	"e-commerce-api/helper"
+	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,7 +21,19 @@ func New(c cart.CartService) cart.CartHandler {
 // Add implements cart.CartHandler
 func (ch *cartHandler) Add() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		panic("unimplemented")
+		userID := c.Get("userID").(uint)
+		productID := c.Param("productID")
+		id, err := strconv.Atoi(productID)
+
+		if err != nil {
+			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
+		}
+
+		err = ch.srv.Add(userID, uint(id))
+		if err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+		return c.JSON(helper.SuccessResponse(http.StatusOK, "berhasil update profil"))
 	}
 }
 

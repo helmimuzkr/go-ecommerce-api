@@ -8,6 +8,11 @@ import (
 	"e-commerce-api/feature/users/data"
 	"e-commerce-api/feature/users/handler"
 	"e-commerce-api/feature/users/services"
+
+	cData "e-commerce-api/feature/cart/data"
+	cHandler "e-commerce-api/feature/cart/handler"
+	cService "e-commerce-api/feature/cart/service"
+
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -34,6 +39,10 @@ func main() {
 	userSrv := services.New(userData)
 	userHdl := handler.New(userSrv)
 
+	cartData := cData.New(db)
+	cartSrv := cService.New(cartData)
+	cartHdl := cHandler.New(cartSrv)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -53,6 +62,8 @@ func main() {
 	e.DELETE("/products/:product_id", productHandler.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 
 	e.POST("/products", productHandler.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+
+	e.POST("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())
 	}
