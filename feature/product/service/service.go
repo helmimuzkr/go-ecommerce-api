@@ -71,7 +71,7 @@ func (ps *productService) GetAll(page int) (map[string]interface{}, []product.Co
 		return nil, nil, errors.New("data tidak ditemukan")
 	}
 	// Limit
-	limit := 10
+	limit := 9
 	// Total pages
 	totalPage := totalRecord / limit
 	if page >= totalPage {
