@@ -18,32 +18,30 @@ func New(db *gorm.DB) cart.CartData {
 
 func (cd *cartData) Add(userID uint, productID uint) error {
 
-	quantity := 1
-	cartLama := &Cart{}
-	tx := cd.db.Where("user_id = ? AND product_id = ?", userID, productID).FirstOrCreate(cartLama)
-	if tx.Error != nil {
-		return tx.Error
+	var count int64
+	err := cd.db.Model(&Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Count(&count).Error
+	if err != nil {
+		return err
 	}
 
-	if tx.RowsAffected > 0 {
-		cartBaru := &Cart{
+	if count == 0 {
+		// Bikin row baru
+		cart := &Cart{
 			UserID:    userID,
 			ProductID: productID,
-			Quantity:  quantity,
+			Quantity:  1,
 		}
 
-		tx := cd.db.Create(cartBaru)
+		tx := cd.db.Create(cart)
 		if tx.Error != nil {
 			return tx.Error
 		}
-
 	} else {
-		cartLama.Quantity += 1
-		tx := cd.db.Save(cartLama)
+		// Update row yang ada
+		tx := cd.db.Model(&Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Update("quantity", gorm.Expr("quantity + ?", 1))
 		if tx.Error != nil {
 			return tx.Error
 		}
-
 	}
 	return nil
 }
