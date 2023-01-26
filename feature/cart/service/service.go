@@ -55,7 +55,7 @@ func (cuc *cartUseCase) Delete(token interface{}, cartID uint) error {
 }
 
 // GetAll implements cart.CartService
-func (cuc *cartUseCase) GetAll(token interface{}) ([]cart.Core, error) {
+func (cuc *cartUseCase) GetAll(token interface{}) (interface{}, error) {
 	id := helper.ExtractToken(token)
 	if id <= 0 {
 		return nil, errors.New("data not found")

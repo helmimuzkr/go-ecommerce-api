@@ -26,35 +26,38 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 	}
 
 	if tx.RowsAffected > 0 {
-
-		cartLama.Quantity += 1
-		tx := cd.db.Save(cartLama)
-		if tx.Error != nil {
-			return tx.Error
-		}
-	} else {
-
 		cartBaru := &Cart{
 			UserID:    userID,
 			ProductID: productID,
 			Quantity:  quantity,
 		}
+
 		tx := cd.db.Create(cartBaru)
 		if tx.Error != nil {
 			return tx.Error
 		}
+
+	} else {
+		cartLama.Quantity += 1
+		tx := cd.db.Save(cartLama)
+		if tx.Error != nil {
+			return tx.Error
+		}
+
 	}
 	return nil
 }
 
 // GetAll implements cart.CartData
-func (cd *cartData) GetAll(userID uint) ([]cart.Core, error) {
-	var carts []cart.Core
-	err := cd.db.Where("user_id = ?", userID).Find(&carts).Error
+func (cd *cartData) GetAll(userID uint) (interface{}, error) {
+	carts := []GetAllCart{}
+
+	err := cd.db.Raw("SELECT products.id, products.name, products.image, users.username, products.price, carts.user_id, carts.quantity, products.stock FROM carts JOIN products ON products.id = carts.product_id JOIN users ON users.id = products.seller_id WHERE carts.user_id = ?", userID).Find(&carts).Error
+
 	if err != nil {
 		return nil, err
 	}
-	return carts, nil
+	return ToSliceCore(carts), nil
 }
 
 // Delete implements cart.CartData

@@ -14,6 +14,40 @@ type Cart struct {
 	Quantity  int
 }
 
+type GetAllCart struct {
+	ID       uint
+	UserID   uint
+	Image    string
+	Name     string
+	Username string
+	Price    uint
+	Quantity uint
+	Stock    uint
+}
+
+func ToCore(data GetAllCart) cart.Core {
+	return cart.Core{
+		ID:          0,
+		UserID:      data.UserID,
+		ProductID:   data.ID,
+		Image:       data.Image,
+		ProductName: data.Name,
+		SellerName:  data.Username,
+		Price:       int(data.Price),
+		Quantity:    int(data.Quantity),
+		Stock:       int(data.Stock),
+		Subtotal:    0,
+	}
+}
+
+func ToSliceCore(data []GetAllCart) []cart.Core {
+	sliceCore := []cart.Core{}
+	for _, v := range data {
+		sliceCore = append(sliceCore, ToCore(v))
+	}
+	return sliceCore
+}
+
 type CartProductDetail struct {
 	ID           uint
 	ProductImage string
