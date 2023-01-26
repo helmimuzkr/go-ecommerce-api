@@ -4,8 +4,9 @@ import "github.com/labstack/echo/v4"
 
 type Core struct {
 	ID           uint
+	CustomerID   uint
+	CustomerName string
 	Invoice      string
-	Customer     string
 	Address      string
 	Phone        string
 	OrderStatus  string
@@ -22,6 +23,7 @@ type OrderItem struct {
 	ProductName string
 	Seller      string
 	City        string
+	Image       string
 	Price       int
 	Qty         int
 	Subtotal    int
@@ -51,7 +53,7 @@ type OrderService interface {
 
 type OrderData interface {
 	CreateOrder(userID uint, order Core, carts []Cart) (uint, error)
-	GetItemById(userID uint, orderID uint) ([]OrderItem, error)
+	GetItemById(orderID uint) ([]OrderItem, error)
 	GetListOrderBuy(userID uint) ([]Core, error)
 	GetListOrderSell(userID uint) ([]Core, error)
 	GetByID(userID uint, orderID uint) (Core, error)

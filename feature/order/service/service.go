@@ -55,7 +55,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	}
 
 	// Ambil order item untuk dimasukkan ke midtrans
-	items, err := os.qry.GetItemById(uint(userID), orderID)
+	items, err := os.qry.GetItemById(orderID)
 	if err != nil {
 		log.Println(err)
 		msg := ""
@@ -73,7 +73,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 		itemMidtrans := midtrans.ItemDetails{
 			ID:           fmt.Sprintf("%d", v.ID),
 			Name:         v.ProductName,
-			MerchantName: v.ProductName,
+			MerchantName: v.Seller,
 			Price:        int64(v.Price),
 			Qty:          int32(v.Qty),
 		}
@@ -141,7 +141,38 @@ func (os *orderService) GetAll(token interface{}, history string) ([]order.Core,
 }
 
 func (os *orderService) GetByID(token interface{}, orderID uint) (order.Core, error) {
-	return order.Core{}, nil
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return order.Core{}, errors.New("token tidak valid")
+	}
+
+	res, err := os.qry.GetByID(uint(userID), orderID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return order.Core{}, errors.New(msg)
+	}
+
+	items, err := os.qry.GetItemById(orderID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return order.Core{}, errors.New(msg)
+	}
+
+	res.Items = items
+
+	return res, nil
 }
 
 func (os *orderService) Cancel(token interface{}, orderID uint) error {

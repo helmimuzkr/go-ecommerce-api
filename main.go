@@ -62,6 +62,7 @@ func main() {
 
 	e.POST("/orders", orderHandler.Create(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/orders/:order_id", orderHandler.GetByID(), middleware.JWT([]byte(config.JWT_KEY)))
 
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())

@@ -30,13 +30,14 @@ type OrderItem struct {
 type OrderModel struct {
 	ID           uint
 	Invoice      string
+	CustomerID   uint
 	Fullname     string
 	Address      string
 	Phone        string
 	OrderStatus  string
 	OrderDate    string
 	PaidDate     string
-	Total        int
+	TotalPrice   int
 	PaymentURL   string
 	PaymentToken string
 	Items        []OrderItemModel `gorm:"-"`
@@ -50,6 +51,7 @@ type OrderItemModel struct {
 	Price    int
 	Quantity int
 	Subtotal int
+	Image    string
 }
 
 func ToModel(oc order.Core) Order {
@@ -72,6 +74,7 @@ func ToCoreItem(oim OrderItemModel) order.OrderItem {
 		Price:       oim.Price,
 		Qty:         oim.Quantity,
 		Subtotal:    oim.Subtotal,
+		Image:       oim.Image,
 	}
 }
 
@@ -87,13 +90,14 @@ func ToCoreOrder(om OrderModel) order.Core {
 	co := order.Core{
 		ID:           om.ID,
 		Invoice:      om.Invoice,
-		Customer:     om.Fullname,
+		CustomerID:   om.CustomerID,
+		CustomerName: om.Fullname,
 		Address:      om.Address,
 		Phone:        om.Phone,
 		OrderStatus:  om.OrderStatus,
 		OrderDate:    om.OrderDate,
 		PaidDate:     om.PaidDate,
-		Total:        om.Total,
+		Total:        om.TotalPrice,
 		PaymentToken: om.PaymentToken,
 		PaymentURL:   om.PaymentURL,
 		Items:        ToListCoreItem(om.Items),
