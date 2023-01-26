@@ -1,6 +1,7 @@
 package config
 
 import (
+	cartMdl "e-commerce-api/feature/cart/data"
 	orderItemModel "e-commerce-api/feature/order/data"
 	orderModel "e-commerce-api/feature/order/data"
 	productModel "e-commerce-api/feature/product/data"
@@ -29,4 +30,6 @@ func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&productModel.Product{})
 	db.AutoMigrate(&orderModel.Order{})
 	db.AutoMigrate(&orderItemModel.OrderItem{})
+	db.AutoMigrate(&cartMdl.Cart{})
+	db.AutoMigrate(&cartMdl.Cart{})
 }

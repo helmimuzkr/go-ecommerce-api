@@ -11,6 +11,11 @@ import (
 	"e-commerce-api/feature/users/data"
 	"e-commerce-api/feature/users/handler"
 	"e-commerce-api/feature/users/services"
+
+	cData "e-commerce-api/feature/cart/data"
+	cHandler "e-commerce-api/feature/cart/handler"
+	cService "e-commerce-api/feature/cart/service"
+
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -41,6 +46,9 @@ func main() {
 	orderData := _orderData.New(db)
 	orderService := _orderService.New(orderData, s)
 	orderHandler := _orderHandler.New(orderService)
+	cartData := cData.New(db)
+	cartSrv := cService.New(cartData)
+	cartHdl := cHandler.New(cartSrv)
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
@@ -64,6 +72,15 @@ func main() {
 	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders/:order_id", orderHandler.GetByID(), middleware.JWT([]byte(config.JWT_KEY)))
 
+	e.POST("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.DELETE("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+
+	e.POST("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/carts/", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.DELETE("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())
 	}
