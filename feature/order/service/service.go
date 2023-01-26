@@ -55,7 +55,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	}
 
 	// Ambil order item untuk dimasukkan ke midtrans
-	items, err := os.qry.GetItemById(orderID)
+	res, err := os.qry.GetItemBuy(uint(userID), orderID)
 	if err != nil {
 		log.Println(err)
 		msg := ""
@@ -69,7 +69,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 
 	// Konversi list item tadi ke list item midtrans
 	listItemMidtrans := []midtrans.ItemDetails{}
-	for _, v := range items {
+	for _, v := range res.Items {
 		itemMidtrans := midtrans.ItemDetails{
 			ID:           fmt.Sprintf("%d", v.ID),
 			Name:         v.ProductName,
@@ -140,13 +140,13 @@ func (os *orderService) GetAll(token interface{}, history string) ([]order.Core,
 	return listOrder, nil
 }
 
-func (os *orderService) GetByID(token interface{}, orderID uint) (order.Core, error) {
+func (os *orderService) GetOrderBuy(token interface{}, orderID uint) (order.Core, error) {
 	userID := helper.ExtractToken(token)
 	if userID <= 0 {
 		return order.Core{}, errors.New("token tidak valid")
 	}
 
-	res, err := os.qry.GetByID(uint(userID), orderID)
+	res, err := os.qry.GetItemBuy(uint(userID), orderID)
 	if err != nil {
 		log.Println(err)
 		msg := ""
@@ -158,7 +158,19 @@ func (os *orderService) GetByID(token interface{}, orderID uint) (order.Core, er
 		return order.Core{}, errors.New(msg)
 	}
 
-	items, err := os.qry.GetItemById(orderID)
+	if res.ID == 0 {
+		return order.Core{}, errors.New("data tidak ditemukan")
+	}
+
+	return res, nil
+}
+func (os *orderService) GetOrderSell(token interface{}, orderID uint) (order.Core, error) {
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return order.Core{}, errors.New("token tidak valid")
+	}
+
+	res, err := os.qry.GetItemSell(uint(userID), orderID)
 	if err != nil {
 		log.Println(err)
 		msg := ""
@@ -170,7 +182,9 @@ func (os *orderService) GetByID(token interface{}, orderID uint) (order.Core, er
 		return order.Core{}, errors.New(msg)
 	}
 
-	res.Items = items
+	if len(res.Items) < 1 {
+		return order.Core{}, errors.New("data tidak ditemukan")
+	}
 
 	return res, nil
 }
