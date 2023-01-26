@@ -25,7 +25,7 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 	}
 
 	if count == 0 {
-		// Create a new row
+		// Bikin row baru
 		cart := &Cart{
 			UserID:    userID,
 			ProductID: productID,
@@ -37,7 +37,7 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 			return tx.Error
 		}
 	} else {
-		// Update the existing row
+		// Update row yang ada
 		tx := cd.db.Model(&Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Update("quantity", gorm.Expr("quantity + ?", 1))
 		if tx.Error != nil {
 			return tx.Error
