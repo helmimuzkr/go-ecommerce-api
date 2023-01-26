@@ -16,10 +16,6 @@ import (
 	cHandler "e-commerce-api/feature/cart/handler"
 	cService "e-commerce-api/feature/cart/service"
 
-	cData "e-commerce-api/feature/cart/data"
-	cHandler "e-commerce-api/feature/cart/handler"
-	cService "e-commerce-api/feature/cart/service"
-
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -50,10 +46,6 @@ func main() {
 	orderData := _orderData.New(db)
 	orderService := _orderService.New(orderData, s)
 	orderHandler := _orderHandler.New(orderService)
-	cartData := cData.New(db)
-	cartSrv := cService.New(cartData)
-	cartHdl := cHandler.New(cartSrv)
-
 	cartData := cData.New(db)
 	cartSrv := cService.New(cartData)
 	cartHdl := cHandler.New(cartSrv)
