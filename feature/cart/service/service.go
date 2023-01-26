@@ -56,10 +56,38 @@ func (cuc *cartUseCase) Delete(token interface{}, cartID uint) error {
 
 // GetAll implements cart.CartService
 func (cuc *cartUseCase) GetAll(token interface{}) ([]cart.Core, error) {
-	panic("unimplemented")
+	id := helper.ExtractToken(token)
+	if id <= 0 {
+		return nil, errors.New("data not found")
+	}
+	carts, err := cuc.qry.GetAll(uint(id))
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terdapat masalah pada server"
+		}
+		return nil, errors.New(msg)
+	}
+	return carts, nil
 }
 
 // Update implements cart.CartService
 func (cuc *cartUseCase) Update(token interface{}, cartID uint, quantity int) error {
-	panic("unimplemented")
+	id := helper.ExtractToken(token)
+	if id <= 0 {
+		return errors.New("data not found")
+	}
+	err := cuc.qry.Update(uint(id), cartID, quantity)
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terdapat masalah pada server"
+		}
+		return errors.New(msg)
+	}
+	return nil
 }
