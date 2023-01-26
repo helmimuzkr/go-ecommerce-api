@@ -1,6 +1,8 @@
 package config
 
 import (
+	orderItemModel "e-commerce-api/feature/order/data"
+	orderModel "e-commerce-api/feature/order/data"
 	productModel "e-commerce-api/feature/product/data"
 	"e-commerce-api/feature/users/data"
 	"fmt"
@@ -25,4 +27,6 @@ func InitDB(ac AppConfig) *gorm.DB {
 func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&data.User{})
 	db.AutoMigrate(&productModel.Product{})
+	db.AutoMigrate(&orderModel.Order{})
+	db.AutoMigrate(&orderItemModel.OrderItem{})
 }
