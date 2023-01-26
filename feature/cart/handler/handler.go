@@ -3,7 +3,6 @@ package handler
 import (
 	"e-commerce-api/feature/cart"
 	"e-commerce-api/helper"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -69,8 +68,7 @@ func (ch *cartHandler) GetAll() echo.HandlerFunc {
 		}
 		sliceResp := []GetAllCartResp{}
 		copier.Copy(&sliceResp, carts.([]cart.Core))
-		fmt.Println(sliceResp)
-		fmt.Println(carts)
+
 		return c.JSON(helper.SuccessResponse(http.StatusOK, "berhasil melihat keranjang", sliceResp))
 	}
 }
