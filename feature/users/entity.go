@@ -12,6 +12,7 @@ type Core struct {
 	Fullname string
 	Password string `validate:"min=5,omitempty"`
 	Email    string `validate:"min=5,omitempty,email"`
+	Address  string
 	City     string
 	Address  string
 	Phone    string
