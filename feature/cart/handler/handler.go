@@ -43,8 +43,8 @@ func (ch *cartHandler) Add() echo.HandlerFunc {
 func (ch *cartHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
-		productID := c.Param("productID")
-		id, err := strconv.Atoi(productID)
+		cartID := c.Param("cart_id")
+		id, err := strconv.Atoi(cartID)
 		if err != nil {
 			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
 		}
@@ -77,12 +77,12 @@ func (ch *cartHandler) GetAll() echo.HandlerFunc {
 func (ch *cartHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
-		productID := c.Param("productID")
+		cartID := c.Param("cart_id")
 		quantity, err := strconv.Atoi(c.FormValue("quantity"))
 		if err != nil {
 			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
 		}
-		id, err := strconv.Atoi(productID)
+		id, err := strconv.Atoi(cartID)
 		if err != nil {
 			return c.JSON(helper.ErrorResponse("Kesalahan pada input user"))
 		}
