@@ -35,7 +35,6 @@ type UserProduct struct {
 	Image       string
 	Username    string
 	City        string
-	Avatar      string
 	CreatedAt   string
 }
 
@@ -57,7 +56,6 @@ func ToCore(up UserProduct) product.Core {
 		Description: up.Description,
 		SellerName:  up.Username,
 		City:        up.City,
-		Avatar:      up.Avatar,
 		Price:       up.Price,
 		Stock:       up.Stock,
 		Image:       up.Image,
