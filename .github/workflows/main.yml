@@ -1,0 +1,44 @@
+name: remote ssh command
+on:
+    push:
+        branches:
+            - main
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - ##
+              name: Checkout
+              uses: actions/checkout@v3
+            - ## Login ke docker hub
+              name: Login to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_TOKEN }}
+            - ## Set up docker build
+              name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+            - ## Build and push image
+              name: Build and push
+              uses: docker/build-push-action@v3
+              with:
+                  context: .
+                  file: ./Dockerfile
+                  push: true
+                  tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest ## my image
+            - name: executing remote ssh commands using password
+              uses: appleboy/ssh-action@v0.1.7
+              with:
+                  host: ${{ secrets.AWS_HOST }}
+                  username: ${{ secrets.AWS_USERNAME }}
+                  key: ${{ secrets.AWS_KEY }}
+                  port: ${{ secrets.AWS_PORT }}
+                  script: |
+                      sudo chmod 777 /var/run/docker.sock
+                      docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
+                      docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
+                      docker rmi  ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
+                      docker pull  ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
+                      docker run --name ${{ secrets.DOCKER_CONTAINER_NAME }} -d -e DB_USER=${{ secrets.DB_USER }} -e DB_PASS=${{ secrets.DB_PASS }} -e DB_HOST=${{ secrets.DB_HOST }}  -e DB_PORT=${{ secrets.DB_PORT }}  -e DB_NAME=${{ secrets.DB_NAME }} -e JWT_KEY=${{ secrets.JWT_KEY }} -e CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_NAME }} -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}  -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} -e CLOUDINARY_UPLOAD_FOLDER=${{ secrets.CLOUDINARY_UPLOAD_FOLDER }} -e MERCHANT_ID=${{ secrets.MIDTRANS_MERCHANT_ID }} -e MERCHANT_ID=${{ secrets.MIDTRANS_CLIENT_ID }} -e SERVER_KEY=${{ secrets.MIDTRANS_SERVER_KEY }} -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
