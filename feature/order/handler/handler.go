@@ -3,6 +3,7 @@ package handler
 import (
 	"e-commerce-api/feature/order"
 	"e-commerce-api/helper"
+	"strconv"
 
 	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
@@ -58,7 +59,21 @@ func (oh *orderHandler) GetAll() echo.HandlerFunc {
 }
 
 func (oh *orderHandler) GetByID() echo.HandlerFunc {
-	return func(c echo.Context) error { return nil }
+	return func(c echo.Context) error {
+		token := c.Get("user")
+
+		str := c.Param("order_id")
+		orderID, _ := strconv.Atoi(str)
+
+		res, err := oh.srv.GetByID(token, uint(orderID))
+		if err != nil {
+			c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		response := ToOrderResponse(res)
+
+		return c.JSON(helper.SuccessResponse(200, "berhasil menampilkan detail order", response))
+	}
 }
 
 func (oh *orderHandler) Cancel() echo.HandlerFunc {

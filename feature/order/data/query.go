@@ -2,7 +2,6 @@ package data
 
 import (
 	"e-commerce-api/feature/order"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -35,9 +34,6 @@ func (od *orderData) CreateOrder(userID uint, newOrder order.Core, carts []order
 		return 0, tx.Error
 	}
 
-	for _, cart := range carts {
-		fmt.Println(cart)
-	}
 	// Delete cart after make an order
 	// tx = od.deleteCart(tx, userID)
 	// if tx.Error != nil {
@@ -63,10 +59,10 @@ func (od *orderData) deleteCart(tx *gorm.DB, userID uint) *gorm.DB {
 	return tx
 }
 
-func (od *orderData) GetItemById(userID uint, orderID uint) ([]order.OrderItem, error) {
+func (od *orderData) GetItemById(orderID uint) ([]order.OrderItem, error) {
 	itemModels := []OrderItemModel{}
-	query := "SELECT products.id, products.name, users.username, users.city, products.price, order_items.quantity, order_items.subtotal FROM order_items JOIN products ON products.id = order_items.product_id JOIN users ON users.id = products.seller_id WHERE order_items.deleted_at IS NULL AND order_items.order_id = ? AND users.id = ?"
-	tx := od.db.Raw(query, userID, orderID).Find(&itemModels)
+	query := "SELECT products.id, products.name, users.username, users.city, products.price, products.image, order_items.quantity, order_items.subtotal FROM order_items JOIN products ON products.id = order_items.product_id JOIN users ON users.id = products.seller_id WHERE order_items.deleted_at IS NULL AND order_items.order_id = ?"
+	tx := od.db.Raw(query, orderID).Find(&itemModels)
 	if tx.Error != nil {
 		tx.Rollback()
 		return nil, tx.Error
@@ -98,7 +94,14 @@ func (od *orderData) GetListOrderSell(userID uint) ([]order.Core, error) {
 }
 
 func (od *orderData) GetByID(userID uint, orderID uint) (order.Core, error) {
-	return order.Core{}, nil
+	o := OrderModel{}
+	query := "SELECT orders.id, orders.invoice, users.id, users.fullname, users.address, users.city, users.phone, orders.order_status, orders.order_date, orders.paid_date, orders.total_price, orders.payment_token, orders.payment_url FROM orders JOIN users ON users.id = orders.customer_id Where orders.id = ?"
+	tx := od.db.Raw(query, orderID).Find(&o)
+	if tx.Error != nil {
+		return order.Core{}, tx.Error
+	}
+
+	return ToCoreOrder(o), nil
 }
 
 func (od *orderData) Cancel(userID uint, orderID uint) error {
