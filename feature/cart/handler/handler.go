@@ -21,7 +21,7 @@ func New(c cart.CartService) cart.CartHandler {
 // Add implements cart.CartHandler
 func (ch *cartHandler) Add() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID := c.Get("userID").(uint)
+		userID := c.Get("user").(uint)
 		productID := c.Param("productID")
 		id, err := strconv.Atoi(productID)
 
@@ -40,7 +40,7 @@ func (ch *cartHandler) Add() echo.HandlerFunc {
 // Delete implements cart.CartHandler
 func (ch *cartHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID := c.Get("userID").(uint)
+		userID := c.Get("user").(uint)
 		productID := c.Param("productID")
 		id, err := strconv.Atoi(productID)
 		if err != nil {
@@ -58,7 +58,7 @@ func (ch *cartHandler) Delete() echo.HandlerFunc {
 // GetAll implements cart.CartHandler
 func (ch *cartHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID := c.Get("userID").(uint)
+		userID := c.Get("user").(uint)
 
 		carts, err := ch.srv.GetAll(userID)
 		if err != nil {
@@ -71,7 +71,7 @@ func (ch *cartHandler) GetAll() echo.HandlerFunc {
 // Update implements cart.CartHandler
 func (ch *cartHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID := c.Get("userID").(uint)
+		userID := c.Get("user").(uint)
 		productID := c.Param("productID")
 		quantity, err := strconv.Atoi(c.FormValue("quantity"))
 		if err != nil {
