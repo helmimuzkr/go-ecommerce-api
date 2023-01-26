@@ -16,6 +16,7 @@ type Core struct {
 	Price       int `validate:"gte=10000"`
 	Stock       int
 	Image       string
+	CreatedDate string
 }
 
 type ProductHandler interface {
