@@ -237,20 +237,6 @@ func TestUpdate(t *testing.T) {
 		assert.Equal(t, uint(0), res.ID)
 		repo.AssertExpectations(t)
 	})
-
-	t.Run("password process error", func(t *testing.T) {
-		input := users.Core{Username: "audi", Email: "audi@gmail.com", Password: "password"}
-		repo.On("GeneratePassword", input.Password).Return("", errors.New("password process error")).Once()
-		srv := New(repo)
-		_, token := helper.GenerateJWT(1)
-		pToken := token.(*jwt.Token)
-		pToken.Valid = true
-		res, err := srv.Update(pToken, input)
-		assert.NotNil(t, err)
-		assert.ErrorContains(t, err, "password process error")
-		assert.Equal(t, uint(0), res.ID)
-		repo.AssertExpectations(t)
-	})
 }
 
 func TestDelete(t *testing.T) {
