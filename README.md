@@ -2,7 +2,7 @@
 
 ## 📘 Dokumentasi API
 
-[![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)](https://app.swaggerhub.com/apis-docs/helmimuzkr/social-media-api/1.0#/)
+[![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)](https://app.swaggerhub.com/apis-docs/helmimuzkr/kicks-api/1.0.0)
 
 ## ⚙️ Installasi Project
 
