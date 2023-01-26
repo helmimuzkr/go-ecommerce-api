@@ -9,10 +9,10 @@ import (
 
 type Core struct {
 	ID       uint
-	User     []users.Core
+	UserID   []users.Core
 	Product  []prd.ProductNonGorm
 	Quantity int
-	Total    int
+	Subtotal int
 }
 
 type CartHandler interface {
@@ -20,7 +20,6 @@ type CartHandler interface {
 	GetAll() echo.HandlerFunc
 	Update() echo.HandlerFunc
 	Delete() echo.HandlerFunc
-	Checkout() echo.HandlerFunc
 }
 
 type CartService interface {
@@ -28,7 +27,6 @@ type CartService interface {
 	GetAll(token interface{}) ([]Core, error)
 	Update(token interface{}, cartID uint, quantity int) error
 	Delete(token interface{}, cartID uint) error
-	Checkout(token interface{}) ([]Core, error)
 }
 
 type CartData interface {
@@ -36,5 +34,4 @@ type CartData interface {
 	GetAll(userID uint) ([]Core, error)
 	Update(userID uint, cartID uint, quantity int) error
 	Delete(userID uint, cartID uint) error
-	Checkout(userID uint) ([]Core, error)
 }
