@@ -43,6 +43,7 @@ type OrderHandler interface {
 	GetOrderBuy() echo.HandlerFunc
 	GetOrderSell() echo.HandlerFunc
 	Cancel() echo.HandlerFunc
+	Confirm() echo.HandlerFunc
 }
 
 type OrderService interface {
@@ -51,6 +52,7 @@ type OrderService interface {
 	GetOrderBuy(token interface{}, orderID uint) (Core, error)
 	GetOrderSell(token interface{}, orderID uint) (Core, error)
 	Cancel(token interface{}, orderID uint) error
+	Confirm(token interface{}, orderID uint) error
 }
 
 type OrderData interface {
@@ -60,5 +62,6 @@ type OrderData interface {
 	GetListOrderBuy(userID uint) ([]Core, error)
 	GetListOrderSell(userID uint) ([]Core, error)
 	GetByID(userID uint, orderID uint) (Core, error)
-	Cancel(userID uint, orderID uint) error
+	Update(userID uint, orderID uint, updateOrder Core) error
+	Confirm(orderID uint, updateOrder Core) error
 }

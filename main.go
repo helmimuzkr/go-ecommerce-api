@@ -70,6 +70,8 @@ func main() {
 
 	e.POST("/orders", orderHandler.Create(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/orders/:order_id/cancel", orderHandler.Cancel(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/orders/:order_id/confirm", orderHandler.Confirm(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders/buy/:order_id", orderHandler.GetOrderBuy(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders/sell/:order_id", orderHandler.GetOrderSell(), middleware.JWT([]byte(config.JWT_KEY)))
 
