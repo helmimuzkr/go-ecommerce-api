@@ -73,23 +73,21 @@ func (cd *cartData) Delete(userID uint, cartID uint) error {
 // Update implements cart.CartData
 func (cd *cartData) Update(userID uint, cartID uint, quantity int) error {
 	cart := &Cart{}
-	tx := cd.db.Where("user_id = ? AND product_id = ?", userID, cartID).FirstOrCreate(cart)
+	tx := cd.db.Where("user_id = ? AND product_id = ?", userID, cartID).First(cart)
+	if tx.Error != nil {
+		return fmt.Errorf("Cart not found for user ID: %v and cart ID: %v", userID, cartID)
+	}
+
+	// Check if quantity is valid
+	if quantity <= 0 {
+		return fmt.Errorf("quantity must be greater than zero")
+	}
+
+	// Update cart
+	cart.Quantity = quantity
+	tx = cd.db.Save(cart)
 	if tx.Error != nil {
 		return tx.Error
-	}
-	if quantity == 0 {
-		return cd.db.Delete(cart).Error
-	}
-	if tx.RowsAffected > 0 {
-		if quantity > 0 {
-			cart.Quantity = quantity
-			tx := cd.db.Save(cart)
-			if tx.Error != nil {
-				return tx.Error
-			}
-		}
-	} else {
-		return fmt.Errorf(" Cart not found for user ID: %v and cart ID: %v", userID, cartID)
 	}
 	return nil
 }
