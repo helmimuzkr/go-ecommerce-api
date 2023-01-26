@@ -296,6 +296,8 @@ paths:
                                                     type: integer
                                                 stock:
                                                     type: integer
+                                                created_date:
+                                                    type: string
                                                 image:
                                                     type: string
                                     message:
@@ -314,6 +316,7 @@ paths:
                                       city: "riau"
                                       price: 6000000
                                       stock: 2
+                                      created_date: "2023-01-26"
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 2
                                       product_name: "Mercurial"
@@ -328,12 +331,14 @@ paths:
                                       city: "riau"
                                       price: 6000000
                                       stock: 2
+                                      created_date: "2023-01-26"
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 4
                                       product_name: "Yeezyyy"
                                       seller_name: "adidas"
                                       city: "riau"
                                       stock: 2
+                                      created_date: "2023-01-26"
                                       price: 6000000
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 5
@@ -370,6 +375,7 @@ paths:
                                       city: "riau"
                                       price: 6000000
                                       stock: 2
+                                      created_date: "2023-01-26"
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 10
                                       product_name: "Yeezyyy"
@@ -377,6 +383,7 @@ paths:
                                       city: "riau"
                                       price: 6000000
                                       stock: 2
+                                      created_date: "2023-01-26"
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 11
                                       product_name: "Mercurial"
@@ -452,7 +459,7 @@ paths:
                                     stock: 10
                                     created_date: "20-12-22"
                                     image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                                message: "berhasil mengganti produk"
+                                message: "sukses menampilkan produk"
         put:
             tags:
                 - "products"
@@ -698,9 +705,20 @@ paths:
             description: melihat histori status order
             security:
                 - Bearer: []
+            parameters:
+                - name: buy
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: sell
+                  in: query
+                  required: false
+                  schema:
+                      type: string
             responses:
                 200:
-                    description: "berhasil melihat histori status order"
+                    description: "sukses menampilkan list history order"
                     content:
                         application/json:
                             schema:
@@ -720,7 +738,7 @@ paths:
                     $ref: "#/components/responses/400"
                 500:
                     $ref: "#/components/responses/500"
-    /orders/{order_id}:
+    /orders/buy/{order_id}:
         get:
             tags:
                 - "orders"
@@ -742,32 +760,111 @@ paths:
                                 $ref: "#/components/schemas/responseObjectArr"
                             example:
                                 data:
-                                    invoice: INV/0001/200123
+                                    invoice: INV/12/20230127/031824
                                     name: budi
                                     address: jl. setiabudi, timor leste
                                     phone: 0923852
-                                    order_status: 1
-                                    order_date: "21-12-22"
-                                    paid_date: "21-12-22"
+                                    order_status: "Pending"
+                                    order_date: "27-01-2023"
+                                    paid_date: ""
+                                    token: "c1b1360c-32e7-4763-811d-62c53ddd37e7"
+                                    payment_link: "https://app.sandbox.midtrans/sanp/c1b1360c-32e7-4763-811d-62c53ddd37e7"
+                                    total: 7000000
                                     product_list:
                                         - product_id: 1
                                           product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
                                           seller_name: "adidas"
-                                          city: "riau"
-                                          price: 6000000
                                           quantity: 1
+                                          subtotal: 199900
+                                          image: https://res.cloudinary.com/dnji8pgyl/image/upload/v1674730672/file/20230126-175750.png
                                         - product_id: 2
-                                          product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
-                                          seller_name: "adidas"
-                                          city: "riau"
-                                          price: 1000000
+                                          product_name: "Convers 70s Egret"
+                                          seller_name: "nike"
                                           quantity: 1
-                                    total: 7000000
-                                message: "berhasil melihat detail order"
+                                          subtotal: 199900
+                                          image: https://res.cloudinary.com/dnji8pgyl/image/upload/v1674730672/file/20230126-175750.png
+                                message: "berhasil menampilkan detail order"
                 400:
                     $ref: "#/components/responses/400"
                 500:
                     $ref: "#/components/responses/500"
+    /orders/sell/{order_id}:
+        get:
+            tags:
+                - "orders"
+            description: melihat histori order
+            parameters:
+                - name: order_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "berhasil melihat detail order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObjectArr"
+                            example:
+                                data:
+                                    invoice: INV/12/20230127/031824
+                                    name: budi
+                                    address: jl. setiabudi, timor leste
+                                    phone: 0923852
+                                    order_status: "Pending"
+                                    order_date: "27-01-2023"
+                                    paid_date: ""
+                                    token: "c1b1360c-32e7-4763-811d-62c53ddd37e7"
+                                    payment_link: "https://app.sandbox.midtrans/sanp/c1b1360c-32e7-4763-811d-62c53ddd37e7"
+                                    total: 7000000
+                                    product_list:
+                                        - product_id: 1
+                                          product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
+                                          seller_name: "adidas"
+                                          quantity: 1
+                                          subtotal: 199900
+                                          image: https://res.cloudinary.com/dnji8pgyl/image/upload/v1674730672/file/20230126-175750.png
+                                        - product_id: 2
+                                          product_name: "Convers 70s Egret"
+                                          seller_name: "nike"
+                                          quantity: 1
+                                          subtotal: 199900
+                                          image: https://res.cloudinary.com/dnji8pgyl/image/upload/v1674730672/file/20230126-175750.png
+                                    message: "berhasil menampilkan detail order"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /orders/{order_id}/confirm:
+        put:
+            tags:
+                - "orders"
+            description: untuk cancel order
+            parameters:
+                - name: order_id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            security:
+                - Bearer: []
+            responses:
+                200:
+                    description: "berhasil menerima order"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseObject"
+                            example:
+                                message: "berhasil menerima order"
+                400:
+                    $ref: "#/components/responses/400"
+                500:
+                    $ref: "#/components/responses/500"
+    /orders/{order_id}/cancel:
         put:
             tags:
                 - "orders"

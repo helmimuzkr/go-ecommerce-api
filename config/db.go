@@ -31,5 +31,4 @@ func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&orderModel.Order{})
 	db.AutoMigrate(&orderItemModel.OrderItem{})
 	db.AutoMigrate(&cartMdl.Cart{})
-	db.AutoMigrate(&cartMdl.Cart{})
 }

@@ -1,6 +1,7 @@
 package data
 
 import (
+	_cart "e-commerce-api/feature/cart/data"
 	_order "e-commerce-api/feature/order/data"
 	"e-commerce-api/feature/product"
 
@@ -16,6 +17,7 @@ type Product struct {
 	Stock       int
 	Image       string
 	OrderItems  []_order.OrderItem `foreignKey:"ProductID"`
+	Carts       []_cart.Cart       `foreignKey:"ProductID"`
 }
 
 type ProductNonGorm struct {
