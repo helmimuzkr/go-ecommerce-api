@@ -30,7 +30,7 @@ func (uc *userControl) Login() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil login", ToResponse(res), token))
+		return c.JSON(helper.SuccessResponse(http.StatusOK, "berhasil login", ToResponse(res), token))
 	}
 }
 func (uc *userControl) Register() echo.HandlerFunc {
@@ -45,7 +45,7 @@ func (uc *userControl) Register() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusCreated, "berhasil mendaftar", ToResponse(res)))
+		return c.JSON(helper.SuccessResponse(http.StatusCreated, "berhasil mendaftar", ToResponse(res)))
 	}
 }
 func (uc *userControl) Profile() echo.HandlerFunc {
@@ -57,7 +57,7 @@ func (uc *userControl) Profile() echo.HandlerFunc {
 			return c.JSON(PrintErrorResponse(err.Error()))
 		}
 
-		return c.JSON(PrintSuccessReponse(http.StatusOK, "berhasil lihat profil", MyProfile(res.(users.Core))))
+		return c.JSON(helper.SuccessResponse(http.StatusOK, "berhasil lihat profil", MyProfile(res.(users.Core))))
 
 	}
 }
