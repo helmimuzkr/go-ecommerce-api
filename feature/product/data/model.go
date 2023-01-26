@@ -1,6 +1,7 @@
 package data
 
 import (
+	_order "e-commerce-api/feature/order/data"
 	"e-commerce-api/feature/product"
 
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ type Product struct {
 	Price       int
 	Stock       int
 	Image       string
+	OrderItems  []_order.OrderItem `foreignKey:"ProductID"`
 }
 
 type ProductNonGorm struct {
@@ -34,6 +36,7 @@ type UserProduct struct {
 	Username    string
 	City        string
 	Avatar      string
+	CreatedAt   string
 }
 
 func ToData(core product.Core) Product {
@@ -58,6 +61,7 @@ func ToCore(up UserProduct) product.Core {
 		Price:       up.Price,
 		Stock:       up.Stock,
 		Image:       up.Image,
+		CreatedDate: up.CreatedAt,
 	}
 }
 
