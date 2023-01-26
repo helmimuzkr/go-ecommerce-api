@@ -134,6 +134,38 @@ func (od *orderData) GetByID(userID uint, orderID uint) (order.Core, error) {
 	return ToCoreOrder(o), nil
 }
 
-func (od *orderData) Cancel(userID uint, orderID uint) error {
+func (od *orderData) Confirm(orderID uint, updateOrder order.Core) error {
+	data := ToModel(updateOrder)
+	tx := od.db.Where("id = ?", orderID).Updates(&data)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	om := []OrderItem{}
+	tx = od.db.Where("order_id = ?", orderID).Find(&om)
+	if tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
+
+	for _, v := range om {
+		tx = tx.Exec("UPDATE products SET stock=stock-? WHERE id=?", v.Quantity, v.ProductID)
+		if tx.Error != nil {
+			tx.Rollback()
+			return tx.Error
+		}
+	}
+
 	return nil
+}
+
+func (od *orderData) Update(userID uint, orderID uint, updateOrder order.Core) error {
+	data := ToModel(updateOrder)
+	tx := od.db.Where("id = ?", orderID).Updates(&data)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+
 }

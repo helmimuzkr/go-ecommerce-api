@@ -94,7 +94,19 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	updateOrder := order.Core{}
 	updateOrder.PaymentURL = snapResp.RedirectURL
 	updateOrder.PaymentToken = snapResp.Token
-	// Update Query disini
+
+	// Update payment url dan token
+	err = os.qry.Update(uint(userID), orderID, updateOrder)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return order.Core{}, errors.New(msg)
+	}
 
 	return updateOrder, nil
 }
@@ -164,6 +176,7 @@ func (os *orderService) GetOrderBuy(token interface{}, orderID uint) (order.Core
 
 	return res, nil
 }
+
 func (os *orderService) GetOrderSell(token interface{}, orderID uint) (order.Core, error) {
 	userID := helper.ExtractToken(token)
 	if userID <= 0 {
@@ -190,5 +203,75 @@ func (os *orderService) GetOrderSell(token interface{}, orderID uint) (order.Cor
 }
 
 func (os *orderService) Cancel(token interface{}, orderID uint) error {
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return errors.New("token tidak valid")
+	}
+
+	res, err := os.qry.GetItemBuy(uint(userID), orderID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
+
+	if res.OrderStatus == "ACCEPTED" {
+		return errors.New("terjadi kesalahan input pada user. order status yang sudah diterima tidak bisa dibatalkan")
+	}
+
+	updateOrder := order.Core{OrderStatus: "CANCELED"}
+	if err := os.qry.Update(uint(userID), orderID, updateOrder); err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
+
+	return nil
+}
+
+func (os *orderService) Confirm(token interface{}, orderID uint) error {
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return errors.New("token tidak valid")
+	}
+
+	res, err := os.qry.GetItemSell(uint(userID), orderID)
+	if err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
+
+	if res.OrderStatus == "CANCELED" {
+		return errors.New("terjadi kesalahan input pada user. order status yang sudah dibatalkan tidak bisa diterima k embali")
+	}
+
+	updateOrder := order.Core{OrderStatus: "ACCEPTED"}
+	if err := os.qry.Confirm(orderID, updateOrder); err != nil {
+		log.Println(err)
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data tidak ditemukan"
+		} else {
+			msg = "terjadi kesalahan pada sistem server"
+		}
+		return errors.New(msg)
+	}
+
 	return nil
 }

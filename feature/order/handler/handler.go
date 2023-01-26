@@ -75,6 +75,7 @@ func (oh *orderHandler) GetOrderBuy() echo.HandlerFunc {
 		return c.JSON(helper.SuccessResponse(200, "berhasil menampilkan detail order", response))
 	}
 }
+
 func (oh *orderHandler) GetOrderSell() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
@@ -95,6 +96,26 @@ func (oh *orderHandler) GetOrderSell() echo.HandlerFunc {
 
 func (oh *orderHandler) Cancel() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		token := c.Get("user")
+		str := c.Param("order_id")
+		orderID, _ := strconv.Atoi(str)
+
+		if err := oh.srv.Cancel(token, uint(orderID)); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+		return c.JSON(helper.SuccessResponse(200, "berhasil melakukan cancel order"))
+	}
+}
+
+func (oh *orderHandler) Confirm() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		token := c.Get("user")
+		str := c.Param("order_id")
+		orderID, _ := strconv.Atoi(str)
+
+		if err := oh.srv.Confirm(token, uint(orderID)); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+		return c.JSON(helper.SuccessResponse(200, "berhasil melakukan menerima order"))
 	}
 }
