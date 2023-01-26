@@ -40,7 +40,21 @@ func (oh *orderHandler) Create() echo.HandlerFunc {
 }
 
 func (oh *orderHandler) GetAll() echo.HandlerFunc {
-	return func(c echo.Context) error { return nil }
+	return func(c echo.Context) error {
+		token := c.Get("user")
+
+		query := c.QueryParam("history")
+
+		res, err := oh.srv.GetAll(token, query)
+		if err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		response := []OrderHistoryResponse{}
+		copier.Copy(&response, &res)
+
+		return c.JSON(helper.SuccessResponse(200, "berhasil menampilkan list history order", response))
+	}
 }
 
 func (oh *orderHandler) GetByID() echo.HandlerFunc {

@@ -2,7 +2,6 @@ package data
 
 import (
 	"e-commerce-api/feature/order"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,6 +12,7 @@ type Order struct {
 	Invoice      string
 	TotalPrice   int
 	OrderStatus  string
+	OrderDate    string
 	PaidDate     string
 	PaymentURL   string
 	PaymentToken string
@@ -34,12 +34,12 @@ type OrderModel struct {
 	Address      string
 	Phone        string
 	OrderStatus  string
-	OrderDate    time.Time
+	OrderDate    string
 	PaidDate     string
 	Total        int
 	PaymentURL   string
 	PaymentToken string
-	Items        []OrderItemModel
+	Items        []OrderItemModel `gorm:"-"`
 }
 
 type OrderItemModel struct {
@@ -57,6 +57,7 @@ func ToModel(oc order.Core) Order {
 		Invoice:      oc.Invoice,
 		TotalPrice:   oc.Total,
 		OrderStatus:  oc.OrderStatus,
+		OrderDate:    oc.OrderDate,
 		PaymentToken: oc.PaymentToken,
 		PaymentURL:   oc.PaymentURL,
 	}
@@ -90,7 +91,7 @@ func ToCoreOrder(om OrderModel) order.Core {
 		Address:      om.Address,
 		Phone:        om.Phone,
 		OrderStatus:  om.OrderStatus,
-		OrderDate:    om.OrderDate.String(),
+		OrderDate:    om.OrderDate,
 		PaidDate:     om.PaidDate,
 		Total:        om.Total,
 		PaymentToken: om.PaymentToken,

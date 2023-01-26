@@ -44,7 +44,7 @@ type OrderHandler interface {
 
 type OrderService interface {
 	Create(token interface{}, carts []Cart) (Core, error)
-	GetAll(token interface{}) ([]Core, error)
+	GetAll(token interface{}, history string) ([]Core, error)
 	GetByID(token interface{}, orderID uint) (Core, error)
 	Cancel(token interface{}, orderID uint) error
 }
@@ -52,7 +52,8 @@ type OrderService interface {
 type OrderData interface {
 	CreateOrder(userID uint, order Core, carts []Cart) (uint, error)
 	GetItemById(userID uint, orderID uint) ([]OrderItem, error)
-	GetAll(userID uint) ([]Core, error)
+	GetListOrderBuy(userID uint) ([]Core, error)
+	GetListOrderSell(userID uint) ([]Core, error)
 	GetByID(userID uint, orderID uint) (Core, error)
 	Cancel(userID uint, orderID uint) error
 }
