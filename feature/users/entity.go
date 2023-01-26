@@ -13,6 +13,7 @@ type Core struct {
 	Password string `validate:"min=5,omitempty"`
 	Email    string `validate:"min=5,omitempty,email"`
 	City     string
+	Address  string
 	Phone    string
 	Product  []data.ProductNonGorm
 }

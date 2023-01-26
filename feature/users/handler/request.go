@@ -20,8 +20,8 @@ type UpdateRequest struct {
 	Password string `json:"password" form:"password"`
 	Email    string `json:"email" form:"email"`
 	City     string `json:"city" form:"city"`
+	Address  string `json:"address" form:"address"`
 	Phone    string `json:"phone" form:"phone"`
-	Avatar   string `json:"avatar" form:"avatar"`
 }
 
 func ReqToCore(data interface{}) *users.Core {

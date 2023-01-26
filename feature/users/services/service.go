@@ -103,41 +103,6 @@ func (uuc *userUseCase) Update(token interface{}, updateData users.Core) (users.
 	if id <= 0 {
 		return users.Core{}, errors.New("data not found")
 	}
-	//ambil user data
-	// res, err := uuc.qry.Profile(uint(id))
-	// if err != nil {
-	// 	return users.Core{}, err
-	// }
-
-	//ambil avatar ID
-	// oldAvatarPublicID := helper.GetPublicID(user.Avatar)
-
-	// if formHeader != nil {
-	// 	// cek file yang di upload
-	// 	formFile, err := formHeader.Open()
-	// 	if err != nil {
-	// 		return users.Core{}, errors.New("input tidak sesuai")
-	// 	}
-
-	// 	uploadUrl, err := helper.UploadFile(formFile)
-	// 	if err != nil {
-	// 		return users.Core{}, errors.New("input tidak sesuai")
-	// 	}
-
-	// 	//ambil avatar ID baru
-	// 	newAvatarPublicID := helper.GetPublicID(uploadUrl)
-
-	// 	if newAvatarPublicID != oldAvatarPublicID {
-	// 		// hapus avatar lama
-	// 		err = helper.DestroyFile(oldAvatarPublicID)
-	// 		if err != nil {
-	// 			return users.Core{}, err
-	// 		}
-	// 	}
-	// 	updateData.Avatar = uploadUrl
-	// } else {
-	// 	updateData.Avatar = user.Avatar
-	// }
 
 	//update user data
 	res, err := uuc.qry.Update(uint(id), updateData)
