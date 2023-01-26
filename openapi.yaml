@@ -29,7 +29,7 @@ paths:
                             properties:
                                 username:
                                     type: string
-                                name:
+                                fullname:
                                     type: string
                                 email:
                                     type: string
@@ -38,7 +38,7 @@ paths:
                                     type: string
                         example:
                             username: budidi
-                            name: budi
+                            fullname: budi didi
                             email: budi@yahoo.com
                             password: "budi123"
             responses:
@@ -49,10 +49,21 @@ paths:
                             schema:
                                 type: object
                                 properties:
+                                    data:
+                                        type: object
+                                        properties:
+                                            username:
+                                                type: string
+                                            email:
+                                                type: string
+                                                format: email
                                     message:
                                         type: string
                             example:
-                                message: "sukses menambahkan data"
+                                data:
+                                    username: budi didi
+                                    email: budi@yahoo.com
+                                message: "berhasil menambahkan data"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -82,11 +93,10 @@ paths:
                                 $ref: "#/components/schemas/responseObject"
                             example:
                                 data:
-                                    id: 1
                                     username: budi
                                     email: budi@yahoo.com
-                                    token: "locm2u32u89fhdu8w7fi"
-                                message: "sukses login"
+                                token: "locm2u32u89fhdu8w7fi"
+                                message: "berhasil login"
                 404:
                     $ref: "#/components/responses/404"
                 400:
@@ -102,7 +112,7 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses melihat data"
+                    description: "berhasil melihat data"
                     content:
                         application/json:
                             schema:
@@ -110,22 +120,22 @@ paths:
                             example:
                                 data:
                                     username: "budidi"
-                                    name: "budi fasola"
+                                    fullname: "budi fasola"
                                     email: "budi@yahoo.com"
                                     city: "papua"
                                     phone: "08124124"
                                     product:
                                         - product_id: 2
                                           image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                                          product_name: "Mercurial"
+                                          name: "Mercurial"
                                           price: 2000000
                                           stock: 10
                                         - product_id: 3
                                           image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                                          product_name: "Mercurial"
+                                          name: "Mercurial"
                                           price: 2000000
                                           stock: 10
-                                message: "sukses menampilkan data"
+                                message: "berhasil lihat profile"
 
                 404:
                     $ref: "#/components/responses/404"
@@ -148,9 +158,15 @@ paths:
                             properties:
                                 username:
                                     type: string
-                                name:
+                                fullname:
                                     type: string
                                 email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+                                    format: password
+                                address:
                                     type: string
                                 city:
                                     type: string
@@ -158,7 +174,7 @@ paths:
                                     type: string
             responses:
                 200:
-                    description: berhasil hapus data
+                    description: berhasil update data
                     content:
                         application/json:
                             schema:
@@ -167,7 +183,7 @@ paths:
                                     message:
                                         type: string
                             example:
-                                message: "sukses update data"
+                                message: "berhasil update profile"
                 404:
                     $ref: "#/components/responses/404"
                 400:
@@ -190,44 +206,7 @@ paths:
                                     message:
                                         type: string
                             example:
-                                message: "sukses menghapus data"
-                400:
-                    $ref: "#/components/responses/400"
-                500:
-                    $ref: "#/components/responses/500"
-    /password:
-        put:
-            tags:
-                - "users"
-            description: ganti user password
-            security:
-                - Bearer: []
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                old_password:
-                                    type: string
-                                new_password:
-                                    type: string
-
-            responses:
-                200:
-                    description: berhasil hapus data
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
-                            example:
-                                message: "sukses menghapus data"
-                404:
-                    $ref: "#/components/responses/404"
+                                message: "berhasil delete profile"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -256,13 +235,13 @@ paths:
                                     format: binary
             responses:
                 200:
-                    description: sukses menambahkan produk
+                    description: berhasil menambahkan produk
                     content:
                         application/json:
                             schema:
                                 type: object
                             example:
-                                message: "sukses menambahkan produk"
+                                message: "berhasil menambahkan produk"
                 404:
                     $ref: "#/components/responses/404"
                 400:
@@ -281,7 +260,7 @@ paths:
                       type: integer
             responses:
                 200:
-                    description: sukses melihat produk
+                    description: berhasil melihat produk
                     content:
                         application/json:
                             schema:
@@ -315,6 +294,8 @@ paths:
                                                     type: string
                                                 price:
                                                     type: integer
+                                                stock:
+                                                    type: integer
                                                 image:
                                                     type: string
                                     message:
@@ -332,29 +313,34 @@ paths:
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 2
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 2
                                       product_name: "Mercurial"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 3
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 3
                                       product_name: "Predator"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 2
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 4
                                       product_name: "Yeezyyy"
                                       seller_name: "adidas"
                                       city: "riau"
+                                      stock: 2
                                       price: 6000000
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 5
                                       product_name: "Mercurial"
                                       seller_name: "adidas"
                                       city: "riau"
+                                      stock: 4
                                       price: 6000000
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 6
@@ -362,44 +348,51 @@ paths:
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 1
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 7
                                       product_name: "Yeezyyy NikeCourt Dri-FIT Slam Pro Max"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 5
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 8
                                       product_name: "Mercurial"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 1
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 9
                                       product_name: "Predator"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 2
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 10
                                       product_name: "Yeezyyy"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 2
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 11
                                       product_name: "Mercurial"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 5
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/82495301-db63-4957-b262-a01502a0b125/jordan-delta-3-low-shoes-fQrm6Q.png"
                                     - product_id: 12
                                       product_name: "Predator"
                                       seller_name: "adidas"
                                       city: "riau"
                                       price: 6000000
+                                      stock: 1
                                       image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/7645744e-8dc3-4113-8489-6caec9c8b71f/jordan-delta-3-low-shoes-fQrm6Q.png"
-                                message: "sukses menampilkan data"
+                                message: "berhasil menampilkan data"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -417,7 +410,7 @@ paths:
                       type: integer
             responses:
                 200:
-                    description: sukses melihat detail produk
+                    description: berhasil melihat detail produk
                     content:
                         application/json:
                             schema:
@@ -459,7 +452,7 @@ paths:
                                     stock: 10
                                     created_date: "20-12-22"
                                     image: "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/e2bce59c-b55e-4104-9a57-4b432ca1ed68/jordan-delta-3-low-shoes-fQrm6Q.png"
-                                message: "sukses mengganti produk"
+                                message: "berhasil mengganti produk"
         put:
             tags:
                 - "products"
@@ -485,17 +478,19 @@ paths:
                                     type: string
                                 stock:
                                     type: integer
+                                price:
+                                    type: integer
                                 image:
                                     type: string
             responses:
                 200:
-                    description: sukses mengganti produk
+                    description: berhasil mengganti produk
                     content:
                         application/json:
                             schema:
                                 type: object
                             example:
-                                message: "sukses mengganti produk"
+                                message: "berhasil update data produk"
                 404:
                     $ref: "#/components/responses/404"
                 400:
@@ -524,7 +519,7 @@ paths:
                                     message:
                                         type: string
                             example:
-                                message: "sukses menghapus data"
+                                message: "berhasil hapus data produk"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -546,7 +541,7 @@ paths:
                                     type: integer
             responses:
                 200:
-                    description: sukses menambahkan produk ke keranjang
+                    description: berhasil menambahkan produk ke keranjang
                     content:
                         application/json:
                             schema:
@@ -555,7 +550,7 @@ paths:
                                 data:
                                     cart_id: 2
                                     product_id: 4
-                                message: "sukses menambahkan produk ke keranjang"
+                                message: "berhasil menambahkan produk ke keranjang"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -568,7 +563,7 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses melihat keranjang"
+                    description: "berhasil melihat keranjang"
                     content:
                         application/json:
                             schema:
@@ -589,7 +584,7 @@ paths:
                                       price: 2000000
                                       quantity: 1
                                       stock: 10
-                                message: "sukses melihat keranjang"
+                                message: "berhasil melihat keranjang"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -620,13 +615,13 @@ paths:
                                     type: integer
             responses:
                 200:
-                    description: "sukses mengupdate keranjang"
+                    description: "berhasil mengupdate keranjang"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/responseObject"
                             example:
-                                message: "sukses mengupdate data"
+                                message: "berhasil mengupdate data"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -645,13 +640,13 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses menghapus produk di keranjang"
+                    description: "berhasil menghapus produk di keranjang"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/responseObject"
                             example:
-                                message: "sukses menghapus produk di keranjang"
+                                message: "berhasil menghapus produk di keranjang"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -667,36 +662,31 @@ paths:
                 content:
                     application/json:
                         schema:
-                            type: object
-                            properties:
-                                cart:
-                                    type: array
-                                    items:
-                                        type: object
-                                message:
-                                    type: string
+                            type: array
+                            items:
+                                type: object
                         example:
-                            cart:
-                                - cart_id: integer
-                                  product_id: integer
-                                  quantity: integer
-                                  subtotal: integer
-                                - cart_id: integer
-                                  product_id: integer
-                                  quantity: integer
-                                  subtotal: integer
+                            - cart_id: integer
+                              product_id: integer
+                              quantity: integer
+                              subtotal: integer
+                            - cart_id: integer
+                              product_id: integer
+                              quantity: integer
+                              subtotal: integer
 
             responses:
                 200:
-                    description: "sukses memproses order"
+                    description: "berhasil memproses order"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/responseObject"
                             example:
                                 data:
-                                    payment_link: "linkforpayment.com/osdhfs0m3r4nd0Mt0K3N"
-                                message: "sukses memproses order"
+                                    token: "eef7a09f-8072-4a9e-8775-8bce8cd91ce7"
+                                    payment_link: "https://app.sandbox.midtrans.com/snap/v3/redirection/eef7a09f-8072-4a9e-8775-8bce8cd91ce7"
+                                message: "berhasil memproses order"
 
                 400:
                     $ref: "#/components/responses/400"
@@ -710,7 +700,7 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses melihat histori status order"
+                    description: "berhasil melihat histori status order"
                     content:
                         application/json:
                             schema:
@@ -725,7 +715,7 @@ paths:
                                       invoice: "INV/0002/210123"
                                       order_date: "21-01-2023"
                                       order_status: "Completed"
-                                message: "sukses update data"
+                                message: "berhasil update data"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -745,7 +735,7 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses melihat detail order"
+                    description: "berhasil melihat detail order"
                     content:
                         application/json:
                             schema:
@@ -773,7 +763,7 @@ paths:
                                           price: 1000000
                                           quantity: 1
                                     total: 7000000
-                                message: "sukses melihat detail order"
+                                message: "berhasil melihat detail order"
                 400:
                     $ref: "#/components/responses/400"
                 500:
@@ -792,13 +782,13 @@ paths:
                 - Bearer: []
             responses:
                 200:
-                    description: "sukses membatalkan order"
+                    description: "berhasil membatalkan order"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/responseObject"
                             example:
-                                message: "sukses membatalkan order"
+                                message: "berhasil membatalkan order"
                 400:
                     $ref: "#/components/responses/400"
                 500:
