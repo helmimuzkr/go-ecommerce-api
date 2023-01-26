@@ -42,7 +42,7 @@ func (uc *userControl) Register() echo.HandlerFunc {
 
 		res, err := uc.srv.Register(*ReqToCore(input))
 		if err != nil {
-			return c.JSON(PrintErrorResponse(err.Error()))
+			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
 		return c.JSON(helper.SuccessResponse(http.StatusCreated, "berhasil mendaftar", ToResponse(res)))
