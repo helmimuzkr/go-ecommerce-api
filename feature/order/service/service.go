@@ -35,6 +35,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	newOrder := order.Core{}
 	newOrder.Invoice = fmt.Sprintf("INV/%d/%s", userID, time.Now().Format("20060102/150405"))
 	newOrder.OrderStatus = "Pending"
+	newOrder.OrderDate = time.Now().Format("02-01-2006")
 	// Hitung total belanjaan
 	for _, v := range carts {
 		newOrder.Total += v.Subtotal
@@ -98,9 +99,47 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	return updateOrder, nil
 }
 
-func (os *orderService) GetAll(token interface{}) ([]order.Core, error) {
-	return nil, nil
+func (os *orderService) GetAll(token interface{}, history string) ([]order.Core, error) {
+	userID := helper.ExtractToken(token)
+	if userID <= 0 {
+		return nil, errors.New("token tidak valid")
+	}
+
+	var listOrder []order.Core
+	switch history {
+	case "buy":
+		res, err := os.qry.GetListOrderBuy(uint(userID))
+		if err != nil {
+			log.Println(err)
+			msg := ""
+			if strings.Contains(err.Error(), "not found") {
+				msg = "data tidak ditemukan"
+			} else {
+				msg = "terjadi kesalahan pada sistem server"
+			}
+			return nil, errors.New(msg)
+		}
+		listOrder = res
+	case "sell":
+		res, err := os.qry.GetListOrderSell(uint(userID))
+		if err != nil {
+			log.Println(err)
+			msg := ""
+			if strings.Contains(err.Error(), "not found") {
+				msg = "data tidak ditemukan"
+			} else {
+				msg = "terjadi kesalahan pada sistem server"
+			}
+			return nil, errors.New(msg)
+		}
+		listOrder = res
+	default:
+		return nil, errors.New("query parameter pada url tidak ditemukan")
+	}
+
+	return listOrder, nil
 }
+
 func (os *orderService) GetByID(token interface{}, orderID uint) (order.Core, error) {
 	return order.Core{}, nil
 }

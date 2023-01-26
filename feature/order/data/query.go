@@ -75,12 +75,32 @@ func (od *orderData) GetItemById(userID uint, orderID uint) ([]order.OrderItem, 
 	return ToListCoreItem(itemModels), nil
 }
 
-func (od *orderData) GetAll(userID uint) ([]order.Core, error) {
-	return nil, nil
+func (od *orderData) GetListOrderBuy(userID uint) ([]order.Core, error) {
+	o := []OrderModel{}
+	query := "SELECT id, invoice, order_status, order_date FROM orders WHERE customer_id = ?"
+	tx := od.db.Raw(query, userID).Find(&o)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return ToListCoreOrder(o), nil
 }
+
+func (od *orderData) GetListOrderSell(userID uint) ([]order.Core, error) {
+	o := []OrderModel{}
+	query := "SELECT orders.id, orders.invoice, orders.order_status, orders.order_date FROM orders JOIN order_items ON order_items.order_id = orders.id JOIN products ON products.id = order_items.product_id WHERE products.seller_id = ?"
+	tx := od.db.Raw(query, userID).Find(&o)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return ToListCoreOrder(o), nil
+}
+
 func (od *orderData) GetByID(userID uint, orderID uint) (order.Core, error) {
 	return order.Core{}, nil
 }
+
 func (od *orderData) Cancel(userID uint, orderID uint) error {
 	return nil
 }

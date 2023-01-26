@@ -61,6 +61,7 @@ func main() {
 	e.DELETE("/products/:product_id", productHandler.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 
 	e.POST("/orders", orderHandler.Create(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
 
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())

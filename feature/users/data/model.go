@@ -1,6 +1,7 @@
 package data
 
 import (
+	_order "e-commerce-api/feature/order/data"
 	"e-commerce-api/feature/product/data"
 	"e-commerce-api/feature/users"
 
@@ -17,6 +18,7 @@ type User struct {
 	Address  string
 	Phone    string
 	Product  []data.Product `gorm:"foreignKey:SellerID"`
+	Orders   []_order.Order `gorm:"foreignKey:CustomerID"`
 }
 
 type Product struct {
