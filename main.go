@@ -72,10 +72,10 @@ func main() {
 	e.GET("/orders", orderHandler.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
 	e.GET("/orders/:order_id", orderHandler.GetByID(), middleware.JWT([]byte(config.JWT_KEY)))
 
-	e.POST("/carts", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
-	e.GET("/carts", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
-	e.PUT("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
-	e.DELETE("/carts/:cart_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.POST("/carts/:product_id", cartHdl.Add(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.GET("/carts", cartHdl.GetAll(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.PUT("/carts/:cart_id", cartHdl.Update(), middleware.JWT([]byte(config.JWT_KEY)))
+	e.DELETE("/carts/:cart_id", cartHdl.Delete(), middleware.JWT([]byte(config.JWT_KEY)))
 	if err := e.Start(":8000"); err != nil {
 		log.Println(err.Error())
 	}
