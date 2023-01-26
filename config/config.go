@@ -14,6 +14,9 @@ var (
 	CLOUDINARY_API_KEY       string = ""
 	CLOUDINARY_API_SECRET    string = ""
 	CLOUDINARY_UPLOAD_FOLDER string = ""
+	MERCHANT_ID              string
+	CLIENT_ID                string
+	SERVER_KEY               string
 )
 
 type AppConfig struct {
@@ -27,6 +30,9 @@ type AppConfig struct {
 	CLOUDINARY_API_KEY       string
 	CLOUDINARY_API_SECRET    string
 	CLOUDINARY_UPLOAD_FOLDER string
+	MERCHANT_ID              string
+	CLIENT_ID                string
+	SERVER_KEY               string
 }
 
 func InitConfig() *AppConfig {
@@ -78,6 +84,18 @@ func ReadEnv() *AppConfig {
 		app.CLOUDINARY_UPLOAD_FOLDER = val
 		isRead = false
 	}
+	if val, found := os.LookupEnv("MERCHANT_ID"); found {
+		app.MERCHANT_ID = val
+		isRead = false
+	}
+	if val, found := os.LookupEnv("CLIENT_ID"); found {
+		app.CLIENT_ID = val
+		isRead = false
+	}
+	if val, found := os.LookupEnv("SERVER_KEY"); found {
+		app.SERVER_KEY = val
+		isRead = false
+	}
 
 	if isRead {
 		viper.AddConfigPath(".")
@@ -100,5 +118,9 @@ func ReadEnv() *AppConfig {
 	CLOUDINARY_API_KEY = app.CLOUDINARY_API_KEY
 	CLOUDINARY_API_SECRET = app.CLOUDINARY_API_SECRET
 	CLOUDINARY_UPLOAD_FOLDER = app.CLOUDINARY_UPLOAD_FOLDER
+	MERCHANT_ID = app.MERCHANT_ID
+	CLIENT_ID = app.CLIENT_ID
+	SERVER_KEY = app.SERVER_KEY
+
 	return &app
 }
