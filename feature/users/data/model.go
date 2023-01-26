@@ -14,6 +14,7 @@ type User struct {
 	Password string
 	Email    string
 	City     string
+	Address  string
 	Phone    string
 	Product  []data.Product `gorm:"foreignKey:SellerID"`
 }
@@ -34,6 +35,7 @@ func ToCore(data User) users.Core {
 		Password: data.Password,
 		Email:    data.Email,
 		City:     data.City,
+		Address:  data.Address,
 		Phone:    data.Phone,
 	}
 }
@@ -46,6 +48,7 @@ func CoreToData(data users.Core) User {
 		Password: data.Password,
 		Email:    data.Email,
 		City:     data.City,
+		Address:  data.Address,
 		Phone:    data.Phone,
 	}
 }

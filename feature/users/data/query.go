@@ -58,6 +58,7 @@ func (uq *userQuery) Profile(id uint) (interface{}, error) {
 		Fullname: res.Fullname,
 		Email:    res.Email,
 		City:     res.City,
+		Address:  res.Address,
 		Phone:    res.Phone,
 	}
 

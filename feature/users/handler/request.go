@@ -45,6 +45,7 @@ func ReqToCore(data interface{}) *users.Core {
 		res.Password = cnv.Password
 		res.Email = cnv.Email
 		res.City = cnv.City
+		res.Address = cnv.Address
 		res.Phone = cnv.Phone
 	default:
 		return nil
