@@ -9,14 +9,12 @@ import (
 
 type UserReponse struct {
 	Username string `json:"username"`
-	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 }
 
 func ToResponse(data users.Core) UserReponse {
 	return UserReponse{
 		Username: data.Username,
-		Fullname: data.Fullname,
 		Email:    data.Email,
 	}
 }

@@ -56,7 +56,7 @@ paths:
                 400:
                     $ref: "#/components/responses/400"
                 500:
-                    $ref: "#/components/responses/400"
+                    $ref: "#/components/responses/500"
     /login:
         post:
             tags:
