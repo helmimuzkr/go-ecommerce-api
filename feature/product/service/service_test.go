@@ -195,7 +195,7 @@ func TestGetAll(t *testing.T) {
 			},
 		}
 		data.On("CountProduct").Return(2, nil).Once()
-		data.On("GetAll", 10, 0).Return(resData, nil).Once()
+		data.On("GetAll", 9, 0).Return(resData, nil).Once()
 
 		paginate, actual, err := srv.GetAll(1)
 
@@ -233,7 +233,7 @@ func TestGetAll(t *testing.T) {
 
 	t.Run("Database error while query get all  product", func(t *testing.T) {
 		data.On("CountProduct").Return(2, nil).Once()
-		data.On("GetAll", 10, 0).Return(nil, errors.New("database error"))
+		data.On("GetAll", 9, 0).Return(nil, errors.New("database error"))
 
 		paginate, actual, err := srv.GetAll(1)
 

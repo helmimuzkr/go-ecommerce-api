@@ -33,7 +33,6 @@ func main() {
 
 	v := validator.New()
 	cld := config.NewCloudinary(*cfg)
-	s := config.NewSnapMidtrans(*cfg)
 
 	productData := _productData.New(db)
 	productService := _productService.New(productData, v, cld)
@@ -44,7 +43,7 @@ func main() {
 	userHdl := handler.New(userSrv)
 
 	orderData := _orderData.New(db)
-	orderService := _orderService.New(orderData, s)
+	orderService := _orderService.New(orderData)
 	orderHandler := _orderHandler.New(orderService)
 	cartData := cData.New(db)
 	cartSrv := cService.New(cartData)
