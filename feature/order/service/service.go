@@ -14,14 +14,12 @@ import (
 )
 
 type orderService struct {
-	qry  order.OrderData
-	snap snap.Client
+	qry order.OrderData
 }
 
-func New(q order.OrderData, s snap.Client) order.OrderService {
+func New(q order.OrderData) order.OrderService {
 	return &orderService{
-		qry:  q,
-		snap: s,
+		qry: q,
 	}
 }
 
@@ -89,7 +87,8 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 		Items: &listItemMidtrans,
 	}
 	// Buat transaksi
-	snapResp, _ := os.snap.CreateTransaction(req)
+	s := helper.NewSnapMidtrans()
+	snapResp, _ := s.CreateTransaction(req)
 
 	updateOrder := order.Core{}
 	updateOrder.PaymentURL = snapResp.RedirectURL
@@ -258,7 +257,7 @@ func (os *orderService) Confirm(token interface{}, orderID uint) error {
 	}
 
 	if res.OrderStatus == "CANCELED" {
-		return errors.New("terjadi kesalahan input pada user. order status yang sudah dibatalkan tidak bisa diterima k embali")
+		return errors.New("terjadi kesalahan input pada user. order status yang sudah dibatalkan tidak bisa diterima kembali")
 	}
 
 	updateOrder := order.Core{OrderStatus: "ACCEPTED"}
