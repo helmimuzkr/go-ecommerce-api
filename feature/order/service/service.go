@@ -31,7 +31,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 
 	// Buat new order
 	newOrder := order.Core{}
-	newOrder.Invoice = fmt.Sprintf("INV/%d/%s", userID, time.Now().Format("20060102/150405"))
+	newOrder.Invoice = fmt.Sprintf("INV-%d-%s", userID, time.Now().Format("20060102-150405"))
 	newOrder.OrderStatus = "Pending"
 	newOrder.OrderDate = time.Now().Format("02-01-2006")
 	// Hitung total belanjaan
