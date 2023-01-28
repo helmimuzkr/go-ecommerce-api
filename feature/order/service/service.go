@@ -79,6 +79,7 @@ func (os *orderService) Create(token interface{}, carts []order.Cart) (order.Cor
 	}
 
 	// Buat request untuk midtrans
+	log.Println("=====================ORDER ID======================", newOrder.Invoice)
 	req := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
 			OrderID:  newOrder.Invoice,
