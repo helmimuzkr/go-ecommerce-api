@@ -3,6 +3,7 @@ package handler
 import (
 	"e-commerce-api/feature/order"
 	"e-commerce-api/helper"
+	"log"
 	"strconv"
 
 	"github.com/jinzhu/copier"
@@ -126,6 +127,7 @@ func (oh *orderHandler) Callback() echo.HandlerFunc {
 		if err := c.Bind(&notificationPayload); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
+		log.Println("==================== HANDLER ==================", notificationPayload)
 
 		orderId, exists := notificationPayload["order_id"].(string)
 		if !exists {
