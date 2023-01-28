@@ -127,6 +127,18 @@ func (oh *orderHandler) Callback() echo.HandlerFunc {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		return c.JSON(helper.SuccessResponse(200, "success menampilkan callback", notificationPayload))
+		orderId, exists := notificationPayload["order_id"].(string)
+		if !exists {
+			// do something when key `order_id` not found
+			return c.JSON(helper.ErrorResponse("order id tidak ditemukan"))
+		}
+
+		core := helper.NewCoreMidtrans()
+		transactionStatusResp, err := core.CheckTransaction(orderId)
+		if err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		return c.JSON(helper.SuccessResponse(200, "success menampilkan callback", transactionStatusResp))
 	}
 }
