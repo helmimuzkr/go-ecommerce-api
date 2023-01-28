@@ -124,9 +124,8 @@ func (oh *orderHandler) Confirm() echo.HandlerFunc {
 func (oh *orderHandler) Callback() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var notificationPayload map[string]interface{}
-		if err := c.Bind(&notificationPayload); err != nil {
-			return c.JSON(helper.ErrorResponse(err.Error()))
-		}
+		c.Bind(&notificationPayload)
+
 		log.Println("==================== HANDLER ==================", notificationPayload)
 
 		orderId, exists := notificationPayload["order_id"].(string)
