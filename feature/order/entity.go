@@ -44,6 +44,7 @@ type OrderHandler interface {
 	GetOrderSell() echo.HandlerFunc
 	Cancel() echo.HandlerFunc
 	Confirm() echo.HandlerFunc
+	Callback() echo.HandlerFunc
 }
 
 type OrderService interface {
