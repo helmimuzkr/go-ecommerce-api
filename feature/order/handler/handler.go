@@ -119,3 +119,14 @@ func (oh *orderHandler) Confirm() echo.HandlerFunc {
 		return c.JSON(helper.SuccessResponse(200, "berhasil melakukan menerima order"))
 	}
 }
+
+func (oh *orderHandler) Callback() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var notificationPayload map[string]interface{}
+		if err := c.Bind(&notificationPayload); err != nil {
+			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		return c.JSON(helper.SuccessResponse(200, "success menampilkan callback", notificationPayload))
+	}
+}
