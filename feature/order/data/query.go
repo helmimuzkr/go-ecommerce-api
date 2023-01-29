@@ -2,7 +2,6 @@ package data
 
 import (
 	"e-commerce-api/feature/order"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -21,6 +20,13 @@ func (od *orderData) CreateOrder(userID uint, newOrder order.Core) (uint, error)
 	model.CustomerID = userID
 	tx := od.db.Create(&model)
 	if tx.Error != nil {
+		tx.Rollback()
+		return 0, tx.Error
+	}
+
+	tx = tx.Exec("UPDATE carts SET deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?", userID)
+	if tx.Error != nil {
+		tx.Rollback()
 		return 0, tx.Error
 	}
 
@@ -54,7 +60,6 @@ func (od *orderData) CreateOrderItem(orderID uint, cartID uint) error {
 		tx.Rollback()
 		return tx.Error
 	}
-	fmt.Println(item)
 
 	tx.Commit()
 
@@ -163,5 +168,4 @@ func (od *orderData) UpdateStatus(invoice string, updateOrder order.Core) error 
 		return tx.Error
 	}
 	return nil
-
 }

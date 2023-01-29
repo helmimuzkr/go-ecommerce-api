@@ -58,7 +58,7 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 func (cd *cartData) GetAll(userID uint) (interface{}, error) {
 	carts := []GetAllCart{}
 
-	err := cd.db.Raw("SELECT carts.id, carts.product_id, products.name, products.image, users.username, products.price, carts.user_id, carts.quantity, products.stock FROM carts JOIN products ON products.id = carts.product_id JOIN users ON users.id = products.seller_id WHERE carts.user_id = ?", userID).Find(&carts).Error
+	err := cd.db.Raw("SELECT carts.id, carts.product_id, products.name, products.image, users.username, products.price, carts.user_id, carts.quantity, products.stock FROM carts JOIN products ON products.id = carts.product_id JOIN users ON users.id = products.seller_id WHERE carts.deleted_at IS NULL AND carts.user_id = ?", userID).Find(&carts).Error
 	if err != nil {
 		return nil, err
 	}
