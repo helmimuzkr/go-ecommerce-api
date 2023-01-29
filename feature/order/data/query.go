@@ -15,10 +15,12 @@ func New(db *gorm.DB) order.OrderData {
 }
 
 func (od *orderData) CreateOrder(userID uint, newOrder order.Core, carts []int) (uint, error) {
+	tx := od.db.Begin()
+
 	// Create new order
 	model := ToModel(newOrder)
 	model.CustomerID = userID
-	tx := od.db.Create(&model)
+	tx = tx.Create(&model)
 	if tx.Error != nil {
 		tx.Rollback()
 		return 0, tx.Error
@@ -49,28 +51,16 @@ func (od *orderData) createOrderItem(tx *gorm.DB, orderID uint, cartID uint) *go
 	// Transfer cart items to order items
 	item := OrderItem{}
 	tx = tx.Raw("SELECT product_id, quantity FROM carts WHERE deleted_at IS NULL AND id = ?", cartID).Find(&item)
-	if tx.Error != nil {
-		tx.Rollback()
-		return tx
-	}
 
 	// Get the price product for counting the subtotal
 	var productPrice int
 	tx = tx.Raw("SELECT price FROM products WHERE deleted_at IS NULL AND id = ? AND stock > 0", item.ProductID).First(&productPrice)
-	if tx.Error != nil {
-		tx.Rollback()
-		return tx
-	}
 
 	item.OrderID = orderID
 	item.Subtotal = item.Quantity * productPrice // Calculate subtotal
 
 	// Insert item to table order_items
-	tx = tx.Create(&item)
-	if tx.Error != nil {
-		tx.Rollback()
-		return tx
-	}
+	tx = tx.Exec("INSERT INTO order_items(order_id, product_id, quantity, subtotal) VALUES(?, ?, ?, ?)", item.OrderID, item.ProductID, item.Quantity, item.Subtotal)
 
 	return tx
 }
