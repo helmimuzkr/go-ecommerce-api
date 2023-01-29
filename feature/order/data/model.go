@@ -62,6 +62,7 @@ func ToModel(oc order.Core) Order {
 		OrderDate:    oc.OrderDate,
 		PaymentToken: oc.PaymentToken,
 		PaymentURL:   oc.PaymentURL,
+		PaidDate:     oc.PaidDate,
 	}
 }
 
