@@ -24,19 +24,13 @@ func (od *orderData) CreateOrder(userID uint, newOrder order.Core) (uint, error)
 		return 0, tx.Error
 	}
 
-	tx = tx.Exec("UPDATE carts SET deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?", userID)
-	if tx.Error != nil {
-		tx.Rollback()
-		return 0, tx.Error
-	}
-
 	return model.ID, nil
 }
 
-func (od *orderData) CreateOrderItem(orderID uint, cartID uint) error {
+func (od *orderData) CreateOrderItem(userID uint, orderID uint, cartID uint) error {
 	tx := od.db.Begin()
 
-	// Convert cart items to order items
+	// Transfer cart items to order items
 	item := OrderItem{}
 	tx = tx.Raw("SELECT product_id, quantity FROM carts WHERE deleted_at IS NULL AND id = ?", cartID).Find(&item)
 	if tx.Error != nil {
@@ -56,6 +50,13 @@ func (od *orderData) CreateOrderItem(orderID uint, cartID uint) error {
 
 	// Insert item to table order_items
 	tx = tx.Create(&item)
+	if tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
+
+	// Delete carts when transfer is done
+	tx = tx.Exec("UPDATE carts SET deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?", userID)
 	if tx.Error != nil {
 		tx.Rollback()
 		return tx.Error

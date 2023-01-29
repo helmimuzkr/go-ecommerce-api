@@ -49,7 +49,7 @@ func (os *orderService) Create(token interface{}, carts []int) (order.Core, erro
 
 	// convert dari cart item ke order item
 	for _, cartID := range carts {
-		err := os.qry.CreateOrderItem(orderID, uint(cartID))
+		err := os.qry.CreateOrderItem(uint(userID), orderID, uint(cartID)) // Need userID for deleting carts
 		if err != nil {
 			log.Println(err)
 			code, msg := 500, "terjadi kesalahan pada sistem server"
