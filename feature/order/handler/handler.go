@@ -123,7 +123,7 @@ func (oh *orderHandler) Callback() echo.HandlerFunc {
 		c.Bind(&webHookRequest)
 
 		core := helper.NewCoreMidtrans()
-		transactionStatusResp, err := core.CheckTransaction(webHookRequest.orderID)
+		transactionStatusResp, err := core.CheckTransaction(webHookRequest.OrderID)
 		if err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
