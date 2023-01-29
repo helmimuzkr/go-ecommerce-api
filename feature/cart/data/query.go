@@ -24,6 +24,14 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 		return err
 	}
 
+	// Check stock
+	var stock int
+	tx := cd.db.Raw("SELECT stock FROM products WHERE deleted_at IS NULL AND id = ? AND stock > 0", productID).First(&stock)
+	if tx.Error != nil {
+		tx.Rollback()
+		return errors.New("stock produk tidak tesedia")
+	}
+
 	if count == 0 {
 		// Bikin row baru
 		cart := &Cart{
@@ -50,11 +58,11 @@ func (cd *cartData) Add(userID uint, productID uint) error {
 func (cd *cartData) GetAll(userID uint) (interface{}, error) {
 	carts := []GetAllCart{}
 
-	err := cd.db.Raw("SELECT products.id, products.name, products.image, users.username, products.price, carts.user_id, carts.quantity, products.stock FROM carts JOIN products ON products.id = carts.product_id JOIN users ON users.id = products.seller_id WHERE carts.user_id = ?", userID).Find(&carts).Error
-
+	err := cd.db.Raw("SELECT carts.id, carts.product_id, products.name, products.image, users.username, products.price, carts.user_id, carts.quantity, products.stock FROM carts JOIN products ON products.id = carts.product_id JOIN users ON users.id = products.seller_id WHERE carts.user_id = ?", userID).Find(&carts).Error
 	if err != nil {
 		return nil, err
 	}
+
 	return ToSliceCore(carts), nil
 }
 
