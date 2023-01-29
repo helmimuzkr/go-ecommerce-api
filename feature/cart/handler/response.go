@@ -3,6 +3,7 @@ package handler
 import "e-commerce-api/feature/cart"
 
 type CartResponse struct {
+	ID          uint   `json:"id"`
 	ProductID   uint   `json:"product_id"`
 	Image       string `json:"image"`
 	ProductName string `json:"product_name"`
@@ -13,6 +14,7 @@ type CartResponse struct {
 }
 
 type GetAllCartResp struct {
+	ID          uint   `json:"id"`
 	ProductID   uint   `json:"product_id"`
 	Image       string `json:"image"`
 	ProductName string `json:"product_name"`
@@ -24,6 +26,7 @@ type GetAllCartResp struct {
 
 func GetAllResponse(data cart.Core) GetAllCartResp {
 	return GetAllCartResp{
+		ID:          data.ID,
 		ProductID:   data.ProductID,
 		Image:       data.Image,
 		ProductName: data.ProductName,
