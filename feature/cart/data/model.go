@@ -15,21 +15,22 @@ type Cart struct {
 }
 
 type GetAllCart struct {
-	ID       uint
-	UserID   uint
-	Image    string
-	Name     string
-	Username string
-	Price    uint
-	Quantity uint
-	Stock    uint
+	ID        uint
+	ProductID uint
+	UserID    uint
+	Image     string
+	Name      string
+	Username  string
+	Price     uint
+	Quantity  uint
+	Stock     uint
 }
 
 func ToCore(data GetAllCart) cart.Core {
 	return cart.Core{
-		ID:          0,
+		ID:          data.ID,
 		UserID:      data.UserID,
-		ProductID:   data.ID,
+		ProductID:   data.ProductID,
 		Image:       data.Image,
 		ProductName: data.Name,
 		SellerName:  data.Username,
