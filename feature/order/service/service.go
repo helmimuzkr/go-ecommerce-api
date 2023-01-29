@@ -41,23 +41,10 @@ func (os *orderService) Create(token interface{}, carts []int) (order.Core, erro
 	newOrder.PaidDate = "waiting payment"
 
 	// Buat order
-	orderID, err := os.qry.CreateOrder(uint(userID), newOrder)
+	orderID, err := os.qry.CreateOrder(uint(userID), newOrder, carts)
 	if err != nil {
 		log.Println(err)
 		return order.Core{}, helper.NewCustErr(500, "terjadi kesalahan pada sistem server")
-	}
-
-	// convert dari cart item ke order item
-	for _, cartID := range carts {
-		err := os.qry.CreateOrderItem(uint(userID), orderID, uint(cartID)) // Need userID for deleting carts
-		if err != nil {
-			log.Println(err)
-			code, msg := 500, "terjadi kesalahan pada sistem server"
-			if strings.Contains(err.Error(), "not found") {
-				code, msg = 404, "gagal membuat order karena item tidak ditemukan"
-			}
-			return order.Core{}, helper.NewCustErr(code, msg)
-		}
 	}
 
 	// Ambil item yang sudah dibuat tadi untuk request midtrans

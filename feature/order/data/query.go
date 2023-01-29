@@ -14,7 +14,7 @@ func New(db *gorm.DB) order.OrderData {
 	return &orderData{db: db}
 }
 
-func (od *orderData) CreateOrder(userID uint, newOrder order.Core) (uint, error) {
+func (od *orderData) CreateOrder(userID uint, newOrder order.Core, carts []int) (uint, error) {
 	// Create new order
 	model := ToModel(newOrder)
 	model.CustomerID = userID
@@ -24,17 +24,34 @@ func (od *orderData) CreateOrder(userID uint, newOrder order.Core) (uint, error)
 		return 0, tx.Error
 	}
 
+	// Transfer cart to order
+	for _, v := range carts {
+		tx = od.createOrderItem(tx, model.ID, uint(v))
+		if tx.Error != nil {
+			tx.Rollback()
+			return 0, tx.Error
+		}
+	}
+
+	// Delete carts when creating order is done
+	tx = tx.Exec("UPDATE carts SET deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?", userID)
+	if tx.Error != nil {
+		tx.Rollback()
+		return 0, tx.Error
+	}
+
+	tx.Commit()
+
 	return model.ID, nil
 }
 
-func (od *orderData) CreateOrderItem(userID uint, orderID uint, cartID uint) error {
-	tx := od.db.Begin()
-
+func (od *orderData) createOrderItem(tx *gorm.DB, orderID uint, cartID uint) *gorm.DB {
 	// Transfer cart items to order items
 	item := OrderItem{}
 	tx = tx.Raw("SELECT product_id, quantity FROM carts WHERE deleted_at IS NULL AND id = ?", cartID).Find(&item)
 	if tx.Error != nil {
-		return tx.Error
+		tx.Rollback()
+		return tx
 	}
 
 	// Get the price product for counting the subtotal
@@ -42,7 +59,7 @@ func (od *orderData) CreateOrderItem(userID uint, orderID uint, cartID uint) err
 	tx = tx.Raw("SELECT price FROM products WHERE deleted_at IS NULL AND id = ? AND stock > 0", item.ProductID).First(&productPrice)
 	if tx.Error != nil {
 		tx.Rollback()
-		return tx.Error
+		return tx
 	}
 
 	item.OrderID = orderID
@@ -52,19 +69,10 @@ func (od *orderData) CreateOrderItem(userID uint, orderID uint, cartID uint) err
 	tx = tx.Create(&item)
 	if tx.Error != nil {
 		tx.Rollback()
-		return tx.Error
+		return tx
 	}
 
-	// Delete carts when transfer is done
-	tx = tx.Exec("UPDATE carts SET deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?", userID)
-	if tx.Error != nil {
-		tx.Rollback()
-		return tx.Error
-	}
-
-	tx.Commit()
-
-	return nil
+	return tx
 }
 
 func (od *orderData) GetOrderSell(userID uint, orderID uint) (order.Core, error) {
