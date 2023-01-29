@@ -50,8 +50,7 @@ type OrderService interface {
 }
 
 type OrderData interface {
-	CreateOrder(userID uint, order Core) (uint, error)
-	CreateOrderItem(userID uint, orderID uint, cart uint) error
+	CreateOrder(userID uint, order Core, carts []int) (uint, error)
 	GetOrderBuy(userID uint, orderID uint) (Core, error)
 	GetOrderSell(userID uint, orderID uint) (Core, error)
 	ListOrderBuy(userID uint) ([]Core, error)
