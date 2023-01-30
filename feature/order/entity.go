@@ -29,14 +29,6 @@ type OrderItem struct {
 	Subtotal    int
 }
 
-type Cart struct {
-	ID        uint
-	OrderID   uint
-	ProductID uint
-	Quantity  int
-	Subtotal  int
-}
-
 type OrderHandler interface {
 	Create() echo.HandlerFunc
 	GetAll() echo.HandlerFunc
@@ -48,21 +40,21 @@ type OrderHandler interface {
 }
 
 type OrderService interface {
-	Create(token interface{}, carts []Cart) (Core, error)
+	Create(token interface{}, carts []int) (Core, error)
 	GetAll(token interface{}, history string) ([]Core, error)
 	GetOrderBuy(token interface{}, orderID uint) (Core, error)
 	GetOrderSell(token interface{}, orderID uint) (Core, error)
 	Cancel(token interface{}, orderID uint) error
 	Confirm(token interface{}, orderID uint) error
+	UpdateStatus(invoice string, status string, paidAt string) error
 }
 
 type OrderData interface {
-	CreateOrder(userID uint, order Core, carts []Cart) (uint, error)
-	GetItemBuy(userID uint, orderID uint) (Core, error)
-	GetItemSell(userID uint, orderID uint) (Core, error)
-	GetListOrderBuy(userID uint) ([]Core, error)
-	GetListOrderSell(userID uint) ([]Core, error)
-	GetByID(userID uint, orderID uint) (Core, error)
-	Update(userID uint, orderID uint, updateOrder Core) error
+	CreateOrder(userID uint, order Core, carts []int) (uint, error)
+	GetOrderBuy(userID uint, orderID uint) (Core, error)
+	GetOrderSell(userID uint, orderID uint) (Core, error)
+	ListOrderBuy(userID uint) ([]Core, error)
+	ListOrderSell(userID uint) ([]Core, error)
 	Confirm(orderID uint, updateOrder Core) error
+	UpdateStatus(invoice string, updateOrder Core) error
 }

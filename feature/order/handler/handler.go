@@ -3,7 +3,6 @@ package handler
 import (
 	"e-commerce-api/feature/order"
 	"e-commerce-api/helper"
-	"log"
 	"strconv"
 
 	"github.com/jinzhu/copier"
@@ -22,17 +21,14 @@ func (oh *orderHandler) Create() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
-		var cartsReq []orderRequest
-		if err := c.Bind(&cartsReq); err != nil {
+		var carts cartRequest
+		if err := c.Bind(&carts); err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
 		}
 
-		carts := []order.Cart{}
-		copier.Copy(&carts, &cartsReq)
-
-		res, err := oh.srv.Create(token, carts)
+		res, err := oh.srv.Create(token, carts.CartID)
 		if err != nil {
-			return c.JSON(helper.ErrorResponse(err.Error()))
+			return c.JSON(helper.ErrResponse(err))
 		}
 
 		response := paymentResponse{PaymentToken: res.PaymentToken, PaymentURL: res.PaymentURL}
@@ -123,21 +119,21 @@ func (oh *orderHandler) Confirm() echo.HandlerFunc {
 
 func (oh *orderHandler) Callback() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var notificationPayload map[string]interface{}
-		c.Bind(&notificationPayload)
-
-		log.Println("==================== HANDLER ==================", notificationPayload)
-
-		orderId, exists := notificationPayload["order_id"].(string)
-		if !exists {
-			// do something when key `order_id` not found
-			return c.JSON(helper.ErrorResponse("order id tidak ditemukan"))
-		}
+		webHookRequest := webHookRequest{}
+		c.Bind(&webHookRequest)
 
 		core := helper.NewCoreMidtrans()
-		transactionStatusResp, err := core.CheckTransaction(orderId)
+		transactionStatusResp, err := core.CheckTransaction(webHookRequest.OrderID)
 		if err != nil {
 			return c.JSON(helper.ErrorResponse(err.Error()))
+		}
+
+		orderID := transactionStatusResp.OrderID
+		orderStatus := transactionStatusResp.TransactionStatus
+		paidDate := transactionStatusResp.SettlementTime
+
+		if err := oh.srv.UpdateStatus(orderID, orderStatus, paidDate); err != nil {
+			return c.JSON(helper.ErrResponse(err))
 		}
 
 		return c.JSON(helper.SuccessResponse(200, "success menampilkan callback", transactionStatusResp))

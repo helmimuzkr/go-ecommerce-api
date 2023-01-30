@@ -6,3 +6,11 @@ type orderRequest struct {
 	Quantity  int  `json:"quantity"`
 	Subtotal  int  `json:"subtotal"`
 }
+
+type cartRequest struct {
+	CartID []int `json:"cart_id"`
+}
+
+type webHookRequest struct {
+	OrderID string `json:"order_id"`
+}
